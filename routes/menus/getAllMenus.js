@@ -1,0 +1,20 @@
+const MenuModel = require("../../models/menu");
+
+module.exports = (app) => {
+    app.get('/menus', async (req, res) => {
+
+        try {
+            const result = await MenuModel.find(req.query);
+
+            res.send({
+                status: "Success",
+                result: result,
+            });
+        } catch (err) {
+            res.send({
+                status: "Error",
+                message: err,
+            });
+        }
+    });
+};
