@@ -2,15 +2,19 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const passport = require('passport');
 
 const app = express();
 
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
+
 app.use(cors());
 app.use(bodyParser.json());
-
 const routes = require("./routes/");
 
-const db = require('./configs/db').mongoURI;
+const db = require('./config/db').mongoURI;
 mongoose.connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
