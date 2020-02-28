@@ -18,7 +18,7 @@ mongoose.connect(db, {
 });
 
 mongoose.connection.once('open', () => {
-    console.log('Connect to MongoDB success')
+    console.log('Connect to MongoDB success');
     routes(app);
 
     const PORT = process.env.PORT || 5000;

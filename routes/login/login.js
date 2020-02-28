@@ -9,12 +9,13 @@ module.exports = (app)=> {
         };
 
         try {
-            const result = await LoginShema.find(req.query);
+            const result = await LoginShema.findOne(user);
             res.send({
                 status: "Success",
-                reqQ: req.query,
-                user,
-                result
+                result: {
+                    login: result.login,
+                    id: result._id,
+                }
             })
         }
         catch (err) {
