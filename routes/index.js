@@ -1,11 +1,9 @@
-
-const login = require("./login/login");
-const register = require("./login/register");
-const current = require("./login/current");
-
+const {login, refreshToken} = require("./login/login");
 
 module.exports = (server) => {
+
+    //auth
     login(server);
-    register(server);
-    current(server);
+    refreshToken(server);
+
 };
