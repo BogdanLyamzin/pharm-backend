@@ -7,6 +7,8 @@ const loginShema = new Schema({
     },
     password: {
         type: String,
+        min: 6,
+        max: 50,
         required: true
     },
 });

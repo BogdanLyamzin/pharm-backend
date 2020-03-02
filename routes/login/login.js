@@ -1,7 +1,7 @@
 const LoginShema = require('../../models/login/login');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const {secretOrKey} = require('../../config/db');
+const config = require('../../config/db');
 
 module.exports = (app)=> {
     app.post("/login", async (req, res) => {
@@ -23,22 +23,30 @@ module.exports = (app)=> {
                 if ( isMatch ) {
                     const payload = {
                         id: user._id,
-                        name: user.name,
                         login: user.login,
-                        email: user.email
                     };
 
                     const token = jwt.sign(
                         payload,
-                        secretOrKey,
-                        { expiresIn: 3600 * 8},
+                        config.secret,
+                        { expiresIn: config.tokenLife},
                     );
 
-                    res.json({
-                        status: "Success",
+                    const refreshToken = jwt.sign(
+                        payload,
+                        config.secret,
+                        { expiresIn: config.refreshTokenLife}
+                    );
+
+                    const response = {
+                        status: "Ok",
                         token: 'JWT' + token,
-                        user: payload
-                    })
+                        refreshToken: refreshToken,
+                        expiresIn: tokenLife
+                    };
+
+                    res.status(200).json(response);
+
                 } else {
                     return res.json({
                         status: "Error",
