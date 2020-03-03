@@ -1,38 +1,35 @@
 const AdminUser = require("../../models/adminUser");
-const Role = require("../../models/role");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const sendMail = require("../../utils/sendMail");
-const { validationResult } = require('express-validator/check');
-const { adminUsersValidators } = require("../../utils/validatorAdminUsers")
+const Role = require("../../models/role");
 
 module.exports = (app) => {
-	app.post("/adminUser", adminUsersValidators, async (req, res) => {
+	app.post("/adminUser", async (req, res) => {
 		try {
-			const errors = validationResult(req);
-			if(!errors.isEmpty()){
+			if(req.password === req.confirm){
+				const {password, name, email} = req.body;
+				const candidate = await AdminUser.findOne({ email });
+				if(candidate){
+					throw new Error( "This user already exists!.");
+				};
+				const htmlBody = `<h2>Hello, ${name}</h2>
+							  <p>Your account was created on Pharm.</p>
+							  <p>Login: ${name}</p>
+							  <p>Password: ${password}</p>`;
+
+				const hashPassword = await bcrypt.hash(password, 10);
+				const role = await Role.findOne({role: req.body.role});
+				const newUser = {...req.body, password: hashPassword, role: role._id};
+
+				const user = new AdminUser(newUser)
+				const result = await user.save();
+
 				res.send({
-					status: "Error",
-					message: errors.array() ///???
-				})
-				return
-			};
-			const {password, name, email, role} = req.body;
-			const userRole = await Role.findById(role).role;
-			const htmlBody = `<h2>Hello, ${name}</h2>
-                              `
-
-
-			const hashPassword = await bcrypt.hash(password, 10)
-
-			const newUser = {...req.body, password: hashPassword};
-			delete newUser.id;
-			const user = new AdminUser(newUser)
-			const result = await user.save();
-			res.send({
-				status: "Success",
-				result
-			});
-			sendMail(name, email, "", htmlBody);
+					status: "Success",
+					result
+				});
+				sendMail(name, email, "Inform letter", htmlBody);
+			}
 		}catch (err) {
 			res.send({
 				status: "Error",

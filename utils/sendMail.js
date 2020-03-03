@@ -9,14 +9,21 @@ module.exports = async function(name, mail, subject, htmlBody) {
 			auth: {
 				user: key.email,
 				pass: key.passwordEm
+			},
+			tls: {
+				rejectUnauthorized: false
 			}
 		});
+		console.log("Aha!")
 		const info = await transporter.sendMail({
-			from: '"Admin" <backend.2020pharma@gmail.com>',
+			from: '<backend.2020pharma@gmail.com>',
 			to: `${name} <${mail}>`,
 			subject: subject,
 			html: htmlBody
+
+
 		})
+		console.log(info.messageId)
 	}catch (err) {
 		console.log(err.message)
 	}

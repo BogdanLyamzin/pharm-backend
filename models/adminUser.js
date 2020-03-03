@@ -1,28 +1,36 @@
 const { Schema, model, Types } = require("mongoose");
+const pattern = require("../utils/validatorPattern");
+const loginShema = require("./login");
 
-const schemaAdminUser = new Schema({
-	email: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	password: {
-		type: String,
-		minlength: 6,
-		required: true
-	},
+const schemaAdminUser = Schema({
 	name: {
 		type: String,
-		required: true
+		required: true,
+		// match: `/^${pattern.name}$/`,
 	},
 	phone: {
-		type: Number,
-		required: true
+		type: String,
+		required: true,
+		// match: `/^${pattern.phone}$/`,
 	},
-	department: String,
+	department: {
+		type: String,
+		// match: `/^${pattern.department}$/`,
+	},
 	role: {
 		type: Types.ObjectId,
 		ref: "Role"
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+		// match: `/^${pattern.email}$/`,
+	},
+	password: {
+		type: String,
+		required: true,
+		// match: `/^${pattern.password}$/`,
 	}
 
 });

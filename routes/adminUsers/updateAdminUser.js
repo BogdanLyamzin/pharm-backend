@@ -1,6 +1,5 @@
 const AdminUser = require("../../models/adminUser");
-const Role = require("../../models/role");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const sendMail = require("../../utils/sendMail");
 const { validationResult } = require('express-validator/check');
 const { adminUsersValidators } = require("../../utils/validatorAdminUsers")
@@ -8,17 +7,11 @@ const { adminUsersValidators } = require("../../utils/validatorAdminUsers")
 module.exports = (app) => {
 	app.put("/adminUser/:id", adminUsersValidators, async (req, res) => {
 		try {
-			const errors = validationResult(req);
-			if(!errors.isEmpty()){
-				res.send({
-					status: "Error",
-					message: errors.array() ///???
-				})
-				return
-			};
-			const {password, name, email, role} = req.body;
-			const userRole = await Role.findById(role).role;
+			const {password, name, email} = req.body;
 			const htmlBody = `<h2>Hello, ${name}</h2>
+							  <p>Your data was updated on Pharm.</p>
+							  <p>Login: ${name}</p>
+							  <p>Password: ${password}</p>
                               `
 
 			const hashPassword = await bcrypt.hash(password, 10);
@@ -32,7 +25,7 @@ module.exports = (app) => {
 				status: "Success",
 				result
 			});
-			sendMail(name, email, "", htmlBody);
+			sendMail(name, email, "Inform letter", htmlBody);
 		}catch (err) {
 			res.send({
 				status: "Error",
