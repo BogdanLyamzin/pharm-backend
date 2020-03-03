@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, { useEffect, useState } from "react";
 import {useHttp} from "../hooks/http.hook";
 import {useMessage} from "../hooks/message.hook";
 import {useHistory} from "react-router-dom"
@@ -34,21 +34,11 @@ export const CreateAdmUser = () => {
 
 	const registerHandler = async () =>{
 		try {
-			const {result} = await request("/role");
-
-
-			const match = result.map((item) => item.role === form.role);
-			console.log(match)
-			if(!match){
-				const data = await request("/role", "POST", {role: form.role});
-				message(data.message);
-			}
 			const data = await request("/adminUser", "POST", {...form});
 			message(data.message);
 			histoty.push("/admUsers");
 
 		}catch (e) {}
-
 	};
 
 	return(

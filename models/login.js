@@ -9,8 +9,7 @@ const loginShema = new Schema({
 	password: {
 		type: Types.ObjectId,
 		ref: "AdminUser"
-	}
-
+	},
 });
 
 module.exports =  model("Login", loginShema);

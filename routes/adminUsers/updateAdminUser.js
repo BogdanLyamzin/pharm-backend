@@ -1,31 +1,34 @@
 const AdminUser = require("../../models/adminUser");
 const bcrypt = require("bcrypt");
 const sendMail = require("../../utils/sendMail");
-const { validationResult } = require('express-validator/check');
-const { adminUsersValidators } = require("../../utils/validatorAdminUsers")
+const checkRole = require("../../utils/checkRole");
+const { letterUpdateUser } = require("../../configs/mail")
 
 module.exports = (app) => {
-	app.put("/adminUser/:id", adminUsersValidators, async (req, res) => {
+	app.put("/adminUser/:id", async (req, res) => {
 		try {
-			const {password, name, email} = req.body;
-			const htmlBody = `<h2>Hello, ${name}</h2>
-							  <p>Your data was updated on Pharm.</p>
-							  <p>Login: ${name}</p>
-							  <p>Password: ${password}</p>
-                              `
-
-			const hashPassword = await bcrypt.hash(password, 10);
-
+			const {password, confirm} = req.body;
 			const id = req.params.id;
-			const newUser = {...req.body, password: hashPassword};
-			delete newUser.id;
-			const result = await AdminUser.findByIdAndUpdate(id, newUser);
 
+			if(req.body.role){
+				checkRole(req.body.role)
+			}
+
+			if(password && password === confirm){
+				const hashPassword = await bcrypt.hash(password, 10);
+				await AdminUser.findByIdAndUpdate(id, {...req.body, password: hashPassword});
+			}else if (!password){
+				await AdminUser.findByIdAndUpdate(id, {...req.body});
+			};
+			const result = await AdminUser.findById(id);
 			res.send({
 				status: "Success",
 				result
 			});
-			sendMail(name, email, "Inform letter", htmlBody);
+			const pass = password || "old password"; // ???How to get correct password?:(
+
+			const htmlBody = letterUpdateUser(result.name, pass);
+			sendMail(result.name, result.email, "Inform letter", htmlBody);
 		}catch (err) {
 			res.send({
 				status: "Error",

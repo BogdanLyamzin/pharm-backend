@@ -7,9 +7,10 @@ module.exports = (app) => {
 			const adminUsers = await AdminUser.find().populate({path: "role", select: "role"});
 			const users = adminUsers.map((user) => ({
 				name: user.name,
+				_id: user._id,
 				email: user.email,
 				phone: user.phone,
-				password: user.password,
+				password: "",
 				department: user.department,
 				role: user.role.role }));
 

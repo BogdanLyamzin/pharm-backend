@@ -7,8 +7,8 @@ export const AdminUserList = ({users}) =>{
 	const histoty = useHistory();
 	const deleteHandler = async (id) =>{
 		try {
-
-			const data = await request(`api/adminUser/${id}`, "DELETE");
+            console.log(id)
+			const data = await request(`/adminUser/${id}`, "DELETE");
 			histoty.push("/admUsers");
 
 		}catch (e) {}
@@ -37,6 +37,7 @@ export const AdminUserList = ({users}) =>{
 
 				<tbody>
 				{users.map((user, index)=>{
+
 					return(
 							<tr key={user._id}>
 								<td>{index + 1}</td>

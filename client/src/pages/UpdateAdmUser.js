@@ -11,12 +11,20 @@ export const UpdateAdmUser = () =>{
 	const message = useMessage();
 	const histoty = useHistory();
 
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		department: "",
+		password: "",
+		confirm: "",
+
+	});
 	const userId = useParams().id;
 	const getUser= useCallback(async () =>{
 		try {
 			const fetched = await request(`/adminUser/${userId}`, "GET");
-			setUser({...fetched, confirm: fetched.password});
+			setUser({...fetched.result, confirm: fetched.result.password});
 		}catch (e) {
 
 		}
@@ -35,8 +43,9 @@ export const UpdateAdmUser = () =>{
 
 	const registerHandler = async () =>{
 		try {
-
-			const data = await request("/adminUser", "POST", {...user});
+			console.log({...user});
+			const data = await request(`/adminUser:${userId}`, "PUT", {...user});
+			console.log(data)
 			message(data.message);
 			histoty.push("/admUsers");
 
@@ -56,7 +65,7 @@ export const UpdateAdmUser = () =>{
 							<div>
 								<div className="input-field">
 									<input
-											placeholder="Enter name"
+
 											id="name" type="text"
 											name="name"
 											value={user.name}
@@ -67,7 +76,6 @@ export const UpdateAdmUser = () =>{
 								</div>
 								<div className="input-field">
 									<input
-											placeholder="Enter email"
 											id="email" type="email"
 											name="email"
 											value={user.email}
@@ -78,7 +86,6 @@ export const UpdateAdmUser = () =>{
 								</div>
 								<div className="input-field">
 									<input
-											placeholder="Enter phone number"
 											id="phone" type="tel"
 											name="phone"
 											value={user.phone}
@@ -90,7 +97,7 @@ export const UpdateAdmUser = () =>{
 								<div className="input-field ">
 
 									<select  id="role" name="role" onChange={changeHandler}>
-										<option value="" disabled selected>Choose role</option>
+										<option value={user.role} disabled selected>Choose role</option>
 										<option value="Owner">Owner</option>
 										<option value="Admin">Admin</option>
 										<option value="Content manager">Content manager</option>
@@ -98,7 +105,6 @@ export const UpdateAdmUser = () =>{
 								</div>
 								<div className="input-field">
 									<input
-											placeholder="Enter department"
 											id="department" type="text"
 											name="department"
 											value={user.department}
@@ -109,7 +115,7 @@ export const UpdateAdmUser = () =>{
 								</div>
 								<div className="input-field">
 									<input
-											placeholder="Enter password"
+											placeholder=""
 											id="password" type="password"
 											name="password"
 											value={user.password}
@@ -120,7 +126,7 @@ export const UpdateAdmUser = () =>{
 								</div>
 								<div className="input-field">
 									<input
-											placeholder="Confirm password"
+											placeholder=""
 											id="confirm" type="password"
 											name="confirm"
 											value={user.confirm}

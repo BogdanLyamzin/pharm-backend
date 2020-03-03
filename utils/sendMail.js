@@ -14,15 +14,12 @@ module.exports = async function(name, mail, subject, htmlBody) {
 				rejectUnauthorized: false
 			}
 		});
-		console.log("Aha!")
 		const info = await transporter.sendMail({
 			from: '<backend.2020pharma@gmail.com>',
 			to: `${name} <${mail}>`,
 			subject: subject,
 			html: htmlBody
-
-
-		})
+		});
 		console.log(info.messageId)
 	}catch (err) {
 		console.log(err.message)
