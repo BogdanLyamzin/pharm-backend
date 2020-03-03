@@ -12,6 +12,7 @@ module.exports = function(passport) {
     passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
         User.findOne({id: jwt_payload.sub}, function(err, user) {
             if (err) {
+                console.log('error in passport');
                 return done(err, false);
             }
             if (user) {

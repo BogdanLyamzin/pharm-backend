@@ -30,8 +30,8 @@ const signIn = async (req, res) => {
             const isMatch = await bcrypt.compare( password, user.password );
 
             if ( isMatch ) {
-                const updatedTokens = await updateTokens( user._id );
-                res.json( updatedTokens );
+                const tokens = await updateTokens( user._id );
+                res.json( tokens );
             } else {
                 res.status( 401 ).json( { message: 'Invalid credentials!' } )
             }
@@ -49,25 +49,30 @@ const refreshTokens = async (req, res) => {
     try {
         payload = jwt.verify( refreshToken, secret );
         if ( payload.type !== 'refresh' ) {
-            res.status( 400 ).json( { message: 'Token expired!' } );
-            return;
-        } else if ( e instanceof jwt.JsonWebTokenError ) {
             res.status( 400 ).json( { message: 'Invalid token!' } );
             return;
         }
-        ;
 
-        const token = await TokenShema.findOne( { tokenId: payload } ).exec();
+    } catch (err) {
+        if ( err instanceof jwt.TokenExpiredError ) {
+            res.status( 400 ).json( { message: 'Token expired!' } );
+            return;
+        } else if ( err instanceof jwt.JsonWebTokenError ) {
+            res.status( 400 ).json( { message: 'Invalid token!' } );
+            return;
+        };
+    }
+
+    try {
+        const token = await TokenShema.findOne( { tokenId: payload.id } ).exec();
         if ( token === null ) {
             throw new Error( 'Invalid token!' );
         }
-
         const tokens = updateTokens( token.userId );
         res.json( tokens );
-    } catch (err) {
+    }  catch (err) {
         res.status( 400 ).json( { message: err.message } )
-    }
-    ;
+    };
 };
 
 module.exports = {
