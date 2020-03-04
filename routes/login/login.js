@@ -1,10 +1,9 @@
 const auth = require('../../controllers/auth');
-// const passport = require('passport');
+const loginLimiter = require('../../controllers/authLimit');
 
 exports.login = (app)=> {
-    app.post( "/login", auth.signIn )
+    app.post( "/login", loginLimiter, auth.signIn )
 };
-
 
 exports.refreshToken = (app)=> {
     app.post( "/refresh-tokens", auth.refreshTokens);
