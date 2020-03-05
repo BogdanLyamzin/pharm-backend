@@ -3,19 +3,27 @@ const bcrypt = require("bcrypt");
 const sendMail = require("../../utils/sendMail");
 const { letterAddUser } = require("../../configs/mail");
 const checkRole = require("../../utils/checkRole");
+const pattern = require("../../utils/validatorPattern");
 const Role = require("../../models/role");
 const Login = require("../../models/login");
+
+
 
 module.exports = (app) => {
 	app.post("/adminUser", async (req, res) => {
 		try {
 			if(req.password === req.confirm){
 				const {password, name, email} = req.body;
+
+				if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[\w!@#\$%\^&-\*]{6,}$/.test(password)) {
+					throw new Error('Password is invalid')
+				}
 				const candidate = await AdminUser.findOne({ email });
 				if(candidate){
 					throw new Error( "This user already exists!.");
 				};
 				checkRole(req.body.role);
+
 				const hashPassword = await bcrypt.hash(password, 10);
 				const role = await Role.findOne({role: req.body.role});
 				const user = new AdminUser({...req.body, password: hashPassword, role: role._id})
