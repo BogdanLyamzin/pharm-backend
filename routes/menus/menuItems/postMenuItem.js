@@ -1,10 +1,17 @@
 const MenuItem = require('../../../models/menuItem');
 
 module.exports = (app) => {
-    app.put('/menus/:menuId/item/:id', async (req, res) => {
+    app.post('/menus/:menuId/items', async (req, res) => {
+
+        const menuItem = new MenuItem({
+            menuItemTitle: req.body.menuItemTitle,
+            menuId: req.params.menuId,
+            subMenu: req.body.subMenu,
+            position: req.body.position
+        });
 
         try {
-            const result = await MenuItem.findByIdAndUpdate(req.params.id, req.body);
+            const result = await menuItem.save();
 
             res.send({
                 status: "Success",

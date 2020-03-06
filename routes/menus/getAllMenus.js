@@ -1,10 +1,10 @@
-const MenuModel = require("../../models/menu");
+const Menu = require("../../models/menu");
 
 module.exports = (app) => {
     app.get('/menus', async (req, res) => {
 
         try {
-            const result = await MenuModel.find(req.query);
+            const result = await Menu.find(req.query);
 
             res.send({
                 status: "Success",

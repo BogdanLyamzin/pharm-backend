@@ -1,24 +1,23 @@
 const mongoose = require('mongoose');
 
 const menuItemSchema = new mongoose.Schema({
-    itemTitle: {
+    menuItemTitle: {
         type: String,
         required: true
     },
-    id: {
-        type: mongoose.ObjectId,
-        unique: true
-    },
     menuId: {
-        type: mongoose.ObjectId,
-        ref: 'MenuModel'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
     },
-    itemIndex: {
-        type: Number
+    subMenu: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MenuItem",
+        default: null
+    },
+    position: {
+        type: Number,
+        required: true
     }
 });
 
-module.exports = {
-    menuItemSchema: menuItemSchema,
-    menuItemModel: mongoose.model('MenuItemModel', menuItemSchema)
-};
+module.exports = mongoose.model('MenuItem', menuItemSchema);

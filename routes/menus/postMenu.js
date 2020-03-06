@@ -1,11 +1,10 @@
-const MenuModel = require('../../models/menu');
+const Menu = require('../../models/menu');
 
 module.exports = (app) => {
     app.post('/menus', async (req, res) => {
 
-        const menu = new MenuModel({
-            menuTitle: req.body.menuTitle,
-            id: req.body.id,
+        const menu = new Menu({
+            menuTitle: req.body.menuTitle
         });
 
         try {

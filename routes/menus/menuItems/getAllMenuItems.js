@@ -1,10 +1,10 @@
 const MenuItem = require('../../../models/menuItem');
 
 module.exports = (app) => {
-    app.get('/menus:menuId/item', async (req, res) => {
+    app.get('/menus/:id/items', async (req, res) => {
 
         try {
-            const result = await MenuItem.find(req.query);
+            const result = await MenuItem.find({ menuId: req.params.id });
 
             res.send({
                 status: "Success",

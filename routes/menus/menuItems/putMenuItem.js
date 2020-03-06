@@ -1,16 +1,16 @@
 const MenuItem = require('../../../models/menuItem');
 
 module.exports = (app) => {
-    app.post('/menus/:menuId/item/', async (req, res) => {
+    app.put('/menus/:menuId/items/:id', async (req, res) => {
 
-        const menuItem = new MenuItem.menuItemModel({
-            menuItemTitle: req.body.menuItemTitle,
-            id: req.body.id,
-            menuId: req.body.menuId
-        });
+        const options = {
+            new: true,
+            upsert: true,
+            setDefaultsOnInsert: true
+        };
 
         try {
-            const result = await menuItem.save();
+            const result = await MenuItem.findByIdAndUpdate(req.params.id, req.body, options);
 
             res.send({
                 status: "Success",

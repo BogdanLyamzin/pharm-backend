@@ -1,27 +1,27 @@
-//menus
+//Menu
 const getAllMenus = require('./menus/getAllMenus');
-const addMenu = require('./menus/addMenu');
+const postMenu = require('./menus/postMenu');
 const getMenuById = require('./menus/getMenuById');
-const editMenu = require('./menus/editMenu');
+const putMenu = require('./menus/putMenu');
 const deleteMenu = require('./menus/deleteMenu');
 
-//menuItem
+//MenuItem
 const getAllMenuItems = require('./menus/menuItems/getAllMenuItems');
-const addMenuItem = require('./menus/menuItems/addMenuItem');
+const postMenuItem = require('./menus/menuItems/postMenuItem');
 const getMenuItemById = require('./menus/menuItems/getMenuItemById');
-const editMenuItem = require('./menus/menuItems/editMenuItem');
+const putMenuItem = require('./menus/menuItems/putMenuItem');
 const deleteMenuItem = require('./menus/menuItems/deleteMenuItem');
 
 module.exports = app => {
     getAllMenus(app);
-    addMenu(app);
+    postMenu(app);
     getMenuById(app);
-    editMenu(app);
+    putMenu(app);
     deleteMenu(app);
 
     getAllMenuItems(app);
-    addMenuItem(app);
+    postMenuItem(app);
     getMenuItemById(app);
-    editMenuItem(app);
+    putMenuItem(app);
     deleteMenuItem(app);
 };

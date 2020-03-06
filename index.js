@@ -1,22 +1,27 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const app = express();
 const routes = require('./routes/routes');
 
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+
 const db = require('./configs/db').mongoURI;
+
 mongoose.connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    useCreateIndex: true
 });
-
-mongoose.set('useCreateIndex', true);
 
 mongoose.connection.on('error', (err) => {
-  console.log('Connection error:', err)
+    console.log('Connection error:', err)
 });
-
 
 mongoose.connection.once('open', () => {
     console.log('Connect to MongoDB success');

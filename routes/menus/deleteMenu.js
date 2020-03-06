@@ -1,10 +1,10 @@
-const MenuModel = require('../../models/menu');
+const Menu = require('../../models/menu');
 
 module.exports = (app) => {
     app.delete('/menus/:id', async (req, res) => {
 
         try {
-            const result = await MenuModel.findByIdAndDelete(req.params.id);
+            const result = await Menu.findByIdAndDelete(req.params.id);
 
             res.send({
                 status: "Success",

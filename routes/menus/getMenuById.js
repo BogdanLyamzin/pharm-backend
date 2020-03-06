@@ -1,16 +1,16 @@
-const MenuModel = require('../../models/menu');
+const Menu = require('../../models/menu');
 
 module.exports = (app) => {
     app.get("/menus/:id", async (req, res) => {
 
         try {
-            const result = await MenuModel.findById(req.params.id);
+            const result = await Menu.findById(req.params.id);
 
             res.send({
                 status: "Success",
                 result: result,
             });
-        } catch(err) {
+        } catch (err) {
             res.send({
                 status: "Error",
                 message: err,

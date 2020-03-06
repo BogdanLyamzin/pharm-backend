@@ -1,7 +1,7 @@
 const MenuItem = require('../../../models/menuItem');
 
 module.exports = (app) => {
-    app.delete('/menus/:menuId/item/:id', async (req, res) => {
+    app.delete('/menus/:menuId/items/:id', async (req, res) => {
 
         try {
             const result = await MenuItem.findByIdAndDelete(req.params.id);

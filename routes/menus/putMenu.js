@@ -1,10 +1,10 @@
-const MenuModel = require('../../models/menu');
+const Menu = require('../../models/menu');
 
 module.exports = (app) => {
     app.put('/menus/:id', async (req, res) => {
 
         try {
-            const result = await MenuModel.findByIdAndUpdate(req.params.id, req.body);
+            const result = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
             res.send({
                 status: "Success",
