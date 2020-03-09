@@ -1,7 +1,7 @@
 const AdminUser = require("../../models/adminUser");
 
 module.exports = (app) => {
-	app.get("/adminUser/:id", async (req, res) => {
+	app.get("/adminUsers/:id", async (req, res) => {
 		try {
 			const adminUser = await AdminUser.findById(req.params.id).populate({path: "role", select: "role"});
 			const user = {

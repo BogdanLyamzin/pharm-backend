@@ -7,8 +7,7 @@ export const AdminUserList = ({users}) =>{
 	const histoty = useHistory();
 	const deleteHandler = async (id) =>{
 		try {
-            console.log(id)
-			const data = await request(`/adminUser/${id}`, "DELETE");
+			const data = await request(`/adminUsers/${id}`, "DELETE");
 			histoty.push("/admUsers");
 
 		}catch (e) {}

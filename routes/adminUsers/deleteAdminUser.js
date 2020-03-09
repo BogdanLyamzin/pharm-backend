@@ -1,13 +1,11 @@
 const AdminUser = require("../../models/adminUser");
-const Login = require("../../models/login")
 
 module.exports = (app) => {
-	app.delete("/adminUser/:id", async (req, res) => {
+	app.delete("/adminUsers/:id", async (req, res) => {
 		try {
 			//Find all pages and articles, which were created this user (to bind to Pages model...)
 			//Update field "author"?
 			const adminUser = await AdminUser.findByIdAndDelete(req.params.id).populate({path: "role", select: "role"});
-			await Login.findByIdAndDelete(req.params.id);
 			const user = {
 				name: adminUser.name,
 				_id: adminUser._id,

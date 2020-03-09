@@ -2,7 +2,7 @@ const AdminUser = require("../../models/adminUser");
 const Role = require("../../models/role")
 
 module.exports = (app) => {
-	app.get("/adminUser", async (req, res) => {
+	app.get("/adminUsers", async (req, res) => {
 
 		try {
 			const match = req.query;
@@ -13,7 +13,7 @@ module.exports = (app) => {
 				const role = await Role.findOne({role: req.query.role });
 				match.role = role._id;
 			}
-			console.log(match)
+
 			const sort = {}; //GET /adminUser?sortBy=field:desc
 			if (req.query.sortBy) {
 				const parts = req.query.sortBy.split(':')
@@ -29,7 +29,7 @@ module.exports = (app) => {
 					sort
 				}
 			});
-			console.log(adminUsers)
+
 
 			const users = adminUsers.map((user) => ({
 				name: user.name,

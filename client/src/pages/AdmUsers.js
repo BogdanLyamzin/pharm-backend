@@ -9,7 +9,7 @@ export const AdmUsers = () =>{
 
 	const fetchUsers = useCallback(async () =>{
 		try {
-			const feched = await request("/adminUser");
+			const feched = await request("/adminUsers");
 			setUsers(feched.result)
 
 		}catch (e) {}

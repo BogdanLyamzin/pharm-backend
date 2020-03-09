@@ -1,39 +1,24 @@
 const { Schema, model, Types } = require("mongoose");
 const pattern = require("../utils/validatorPattern");
-
+const validator = require("../utils/validator");
 
 const schemaAdminUser = Schema({
 	name: {
 		type: String,
 		required: true,
 		trim: true,
-		validate(value) {
-			if (!/^[A-Za-zА-Яа-я\-]{2,}\s[A-Za-zА-Яа-я\-\s]{2,}$/.test(value)) {
-				throw new Error('Name is invalid')
-			}
-		},
-		// match: `/^${pattern.name}$/`,
+		validate(value){validator(value, pattern.name.reg, pattern.name.message)},
 	},
 	phone: {
 		type: String,
 		required: true,
 		trim: true,
-		validate(value) {
-			if (!/^[+\s]?\(?\s?\d*[\s\-]?\)?\(?\s?\d{3,}[\s\-]?\)?\s?\d{1,3}[\s\-]?\d{2}[\s\-]?\d{2}$/.test(value)) {
-				throw new Error('Phone number is invalid')
-			}
-		},
-		// match: `/^${pattern.phone}$/`,
+		validate(value){validator(value, pattern.phone.reg, pattern.phone.message)},
 	},
 	department: {
 		type: String,
 		trim: true,
-		validate(value) {
-			if (!/^[A-Za-z\-]{2,}[A-Za-z\-\s]*$/.test(value)) {
-				throw new Error('Department is invalid')
-			}
-		},
-		// match: `/^${pattern.department}$/`,
+		validate(value){validator(value, pattern.department.reg, pattern.department.message)},
 	},
 	role: {
 		type: Types.ObjectId,
@@ -45,20 +30,13 @@ const schemaAdminUser = Schema({
 		lowercase: true,
 		required: true,
 		unique: true,
-		validate(value) {
-			if (!/^[a-z0-9]+[\w\-\.]*[a-z0-9]+\@[a-z0-9]+[\w\-\.]*[a-z0-9]+\.[a-z]{2,}$/.test(value)) {
-				throw new Error('Email is invalid')
-			}
-		},
-		// match: `/^${pattern.email}$/`,
+		validate(value){validator(value, pattern.email.reg, pattern.email.message)},
 	},
 	password: {
 		type: String,
 		trim: true,
 		required: true,
-		// match: `/^${pattern.password}$/`,
 	}
-
 });
 
 module.exports = model("AdminUser", schemaAdminUser);

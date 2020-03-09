@@ -44,7 +44,7 @@ export const UpdateAdmUser = () =>{
 	const registerHandler = async () =>{
 		try {
 			console.log({...user});
-			const data = await request(`/adminUser:${userId}`, "PUT", {...user});
+			const data = await request(`/adminUsers:${userId}`, "PUT", {...user});
 			console.log(data)
 			message(data.message);
 			histoty.push("/admUsers");

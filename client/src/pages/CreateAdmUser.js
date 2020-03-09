@@ -34,7 +34,7 @@ export const CreateAdmUser = () => {
 
 	const registerHandler = async () =>{
 		try {
-			const data = await request("/adminUser", "POST", {...form});
+			const data = await request("/adminUsers", "POST", {...form});
 			message(data.message);
 			histoty.push("/admUsers");
 
