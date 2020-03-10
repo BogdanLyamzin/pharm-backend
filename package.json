@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client \" "
   },
   "repository": {
     "type": "git",
@@ -18,9 +21,22 @@
   },
   "homepage": "https://github.com/BogdanLyamzin/pharm-backend#readme",
   "dependencies": {
-
+    "bcrypt": "^4.0.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "generate-password": "^1.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "materialize-css": "^1.0.0",
+    "mongoose": "^5.9.2",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.3",
+    "passport": "^0.4.1",
+    "xregexp": "^4.3.0"
   },
   "devDependencies": {
-
+    "nodemon": "^2.0.2"
   }
 }
