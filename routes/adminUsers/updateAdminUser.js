@@ -23,7 +23,19 @@ module.exports = (app) => {
 			}else if (!password){
 				await AdminUser.findByIdAndUpdate(id, {...req.body});
 			};
-			const result = await AdminUser.findById(id);
+			const adminUser = await AdminUser.findById(id);
+			await AdminUser.findByIdAndUpdate(id, {lowerName: adminUser.name.toLowerCase(),
+				lowerDepartment: adminUser.department.toLowerCase()});
+
+			const result = {
+				name: adminUser.name,
+				_id: adminUser._id,
+				email: adminUser.email,
+				phone: adminUser.phone,
+				department: adminUser.department,
+				role: adminUser.role.role
+			};
+
 			res.send({
 				status: "Success",
 				result

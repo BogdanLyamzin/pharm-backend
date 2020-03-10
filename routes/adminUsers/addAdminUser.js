@@ -25,8 +25,21 @@ module.exports = (app) => {
 
 				const hashPassword = await bcrypt.hash(password, 10);
 				const role = await Role.findOne({role: req.body.role});
-				const user = new AdminUser({...req.body, password: hashPassword, role: role._id})
-				const result = await user.save();
+				const user = new AdminUser({...req.body,
+					password: hashPassword,
+					role: role._id,
+					lowerName: req.body.name.toLowerCase(),
+					lowerDepartment: req.body.department.toLowerCase()
+				})
+				const userSave = await user.save();
+				const result = {
+					name: userSave.name,
+					_id: userSave._id,
+					email: userSave.email,
+					phone: userSave.phone,
+					department: userSave.department,
+					role: userSave.role.role
+				};
 
 				res.send({
 					status: "Success",

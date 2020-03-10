@@ -11,7 +11,6 @@ module.exports = (app) => {
 				_id: adminUser._id,
 				email: adminUser.email,
 				phone: adminUser.phone,
-				password: adminUser.password,
 				department: adminUser.department,
 				role: adminUser.role.role
 			};

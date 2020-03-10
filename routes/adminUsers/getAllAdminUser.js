@@ -5,6 +5,25 @@ module.exports = (app) => {
 	app.get("/adminUsers", async (req, res) => {
 
 		try {
+			const sort = {}; //GET /adminUser?sortBy=field:desc
+			if(req.query.sortBy){
+				const parts = req.query.sortBy.split(':');
+				sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
+				if(sort.name){
+					sort.lowerName = sort.name;
+					delete sort.name
+				};
+				if(sort.department){
+					sort.lowerDepartment = sort.department;
+					delete sort.department
+				};
+			};
+
+			console.log(sort)
+
+
+			const limit = parseInt(req.query.limit);
+			const skip = parseInt(req.query.skip);
 			const match = req.query;
 			delete match.sortBy;
 			delete match.limit;
@@ -12,31 +31,22 @@ module.exports = (app) => {
 			if(req.query.role) {
 				const role = await Role.findOne({role: req.query.role });
 				match.role = role._id;
-			}
-
-			const sort = {}; //GET /adminUser?sortBy=field:desc
-			if (req.query.sortBy) {
-				const parts = req.query.sortBy.split(':')
-				sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
 			};
 
-			const adminUsers = await AdminUser.find(match).populate({
+			const adminUsers = await AdminUser.find(match)
+					.sort(sort)
+					.limit(limit)
+					.skip(skip)
+					.populate({
 				path: "role",
-				select: "role",
-				options: {
-					limit: parseInt(req.query.limit),
-					skip: parseInt(req.query.skip),
-					sort
-				}
+				select: "role"
 			});
-
 
 			const users = adminUsers.map((user) => ({
 				name: user.name,
 				_id: user._id,
 				email: user.email,
 				phone: user.phone,
-				password: "",
 				department: user.department,
 				role: user.role.role }));
 
