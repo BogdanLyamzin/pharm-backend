@@ -1,8 +1,16 @@
 const XRegExp = require('xregexp');
 
-module.exports = function (val, regEx, message) {
-	if (!XRegExp.test(val,regEx)) {
-		throw new Error(message)
-	}
-	
+module.exports = function createValidate(...args)  {
+	const obj = {};
+	args.forEach(({ reg, name, error }) => obj[name] = {
+		validator: function (v) {
+			return XRegExp.test(v, reg);
+		},
+		message: props => error
+	});
+	return obj;
 }
+
+
+
+
