@@ -1,20 +1,15 @@
 const Role = require("../../models/role");
+const asyncHandler = require("../../middleware/async");
 
+// @access   role=admin???
 module.exports = (app) => {
-	app.post("/role", async (req, res) => {
-		try {
-			const newRole = {...req.body};
-			const role = new Role(newRole)
-			const result = await role.save();
-			res.send({
-				status: "Success",
-				result
-			});
-		}catch (err) {
-			res.send({
-				status: "Error",
-				message: err.message
-			})
-		}
-	})
+	app.post("/roles", asyncHandler(async (req, res, next) => {
+		const newRole = {...req.body};
+		const role = new Role(newRole)
+		const data = await role.save();
+		res.status(201).json({
+			success: true,
+			data
+		});
+	}))
 }

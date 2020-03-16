@@ -1,18 +1,10 @@
 const Role = require("../../models/role");
+const asyncHandler = require("../../middleware/async");
+const advancedResults = require("../../middleware/advancedResults");
+
 
 module.exports = (app) => {
-	app.get("/role", async (req, res) => {
-		try {
-			const roles = await Role.find();
-			res.send({
-				status: "Success",
-				result: roles
-			});
-		}catch (err) {
-			res.send({
-				status: "Error",
-				message: err.message
-			})
-		}
-	})
+	app.get("/roles", advancedResults(Role), asyncHandler(async (req, res) => {
+		res.status(200).json(res.advancedResults);
+	}))
 }

@@ -30,5 +30,11 @@ module.exports = {
 		name: "department",
 		reg: /[\wА-Яа-я\-\&\s]{2,}/,
 		error: "Department name must consist of not less than two symbols.",
+	},
+	role: {
+		name: "role",
+		reg: /^(owner)|(admin)|(content manager)$/,
+		error: "Role value must be only owner, admin or content manager.",
+		required: "Please choose a role"
 	}
 }
