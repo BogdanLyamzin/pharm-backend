@@ -1,54 +1,45 @@
 const AdminUser = require("../../models/adminUser");
-const bcrypt = require("bcrypt");
-const pattern = require("../../utils/validatorPattern");
-const validator = require("../../utils/validator")
+const Role = require("../../models/role");
 const sendMail = require("../../utils/sendMail");
 const checkRole = require("../../utils/checkRole");
-const { letterUpdateUser } = require("../../configs/mail")
+const { letterUpdateUser } = require("../../configs/mail");
+const asyncHandler = require("../../middleware/async");
+const ErrorResponse = require('../../utils/errorResponse');
 
 module.exports = (app) => {
-	app.put("/adminUsers/:id", async (req, res) => {
-		try {
-			const {password, confirm} = req.body;
-			const id = req.params.id;
+	app.put("/adminUsers/:id", asyncHandler(async (req, res, next) => {
+		const id = req.params.id;
+		const qerBody = {...req.body};
 
-			if(req.body.role){
-				checkRole(req.body.role)
-			}
+		const adminUser = await AdminUser.findById(id).populate({path: "role", select: "role"});
 
-			if(password && password === confirm){
-				validator(password, pattern.password.reg, pattern.password.message);
-				const hashPassword = await bcrypt.hash(password, 10);
-				await AdminUser.findByIdAndUpdate(id, {...req.body, password: hashPassword});
-			}else if (!password){
-				await AdminUser.findByIdAndUpdate(id, {...req.body});
-			};
-			const adminUser = await AdminUser.findById(id);
-			await AdminUser.findByIdAndUpdate(id, {lowerName: adminUser.name.toLowerCase(),
-				lowerDepartment: adminUser.department.toLowerCase()});
+		if (!adminUser) {
+			return next(new ErrorResponse(`User not found with id of ${req.params.id}`, 404));
+		};
 
-			const result = {
-				name: adminUser.name,
-				_id: adminUser._id,
-				email: adminUser.email,
-				phone: adminUser.phone,
-				department: adminUser.department,
-				role: adminUser.role.role
-			};
-
-			res.send({
-				status: "Success",
-				result
-			});
-			const pass = password || "old password"; // ???How to get correct password?:(
-
-			const htmlBody = letterUpdateUser(result.name, pass);
-			sendMail(result.name, result.email, "Inform letter", htmlBody);
-		}catch (err) {
-			res.send({
-				status: "Error",
-				message: err.message
-			})
+		if(qerBody.role){
+			checkRole(qerBody.role);
+			const role = await Role.find({role: qerBody.role});
+			qerBody.role = role._id;
 		}
-	})
+
+		if(qerBody.password && qerBody.password === qerBody.confirm){
+			await AdminUser.findByIdAndUpdate(id, qerBody);
+		}else if (!qerBody.password){
+			await AdminUser.findByIdAndUpdate(id, qerBody);
+		}else {
+			return next(new ErrorResponse("Please check password and clearly confirm it.", 400))
+		};
+
+		const updateUser = await AdminUser.findById(id).populate({path: "role", select: "role"});
+
+		const data = {...updateUser._doc, role: updateUser._doc.role.role };
+
+		res.status(201).json({
+			success: true,
+			data
+		});
+		const htmlBody = letterUpdateUser(data.name);
+		sendMail(data.name, data.email, "Inform letter", htmlBody);
+	}))
 }

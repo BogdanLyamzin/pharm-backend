@@ -1,32 +1,27 @@
 const { Schema, model, Types } = require("mongoose");
-const pattern = require("../utils/validatorPattern");
+const bcrypt = require("bcrypt");
+const { name, password, email, department, phone } = require("../utils/validatorPattern");
 const validator = require("../utils/validator");
 
 const schemaAdminUser = Schema({
 	name: {
 		type: String,
-		required: [true, "Field name is required"],
+		required: [true, name.required],
 		trim: true,
-		validate(value){validator(value, pattern.name.reg, pattern.name.message)},
-	},
-	lowerName: {
-		type: String,
-		lowercase: true,
+		lowercase: true,   // in this way or we will need to add additional field to sort and search
+
 	},
 	phone: {
 		type: String,
-		required: [true, "Field phone is required"],
+		required: [true, phone.required],
 		trim: true,
-		validate(value){validator(value, pattern.phone.reg, pattern.phone.message)},
+
 	},
 	department: {
 		type: String,
 		trim: true,
-		validate(value){validator(value, pattern.department.reg, pattern.department.message)},
-	},
-	lowerDepartment: {
-		type: String,
 		lowercase: true,
+
 	},
 	role: {
 		type: Types.ObjectId,
@@ -36,16 +31,31 @@ const schemaAdminUser = Schema({
 		type: String,
 		trim: true,
 		lowercase: true,
-		required: [true, "Field email is required"],
+		required: [true, email.required],
 		unique: true,
-		validate(value){validator(value, pattern.email.reg, pattern.email.message)},
+
 	},
 	password: {
 		type: String,
 		trim: true,
-		required: [true, "Field password is required"],
+		required: [true, password.required],
+		select: false
 	}
 });
+
+// Encrypt password using bcrypt
+schemaAdminUser.pre('save', async function(next) {
+	if (!this.isModified('password')) {
+		next();	}
+
+	const salt = await bcrypt.genSalt(10);
+	this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Match user entered password to hashed password in database
+schemaAdminUser.methods.matchPassword = async function(enteredPassword) {
+	return await bcrypt.compare(enteredPassword, this.password);
+};
 
 
 

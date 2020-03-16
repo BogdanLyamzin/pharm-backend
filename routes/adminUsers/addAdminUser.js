@@ -1,59 +1,30 @@
 const AdminUser = require("../../models/adminUser");
-const bcrypt = require("bcrypt");
 const sendMail = require("../../utils/sendMail");
 const { letterAddUser } = require("../../configs/mail");
 const checkRole = require("../../utils/checkRole");
-const pattern = require("../../utils/validatorPattern");
-const validator = require("../../utils/validator")
 const Role = require("../../models/role");
+const asyncHandler = require("../../middleware/async");
+const ErrorResponse = require('../../utils/errorResponse');
 
-
+// @access   role=admin???
 module.exports = (app) => {
-	app.post("/adminUsers", async (req, res) => {
-		try {
-			if(req.password === req.confirm){
-				const {password, name, email} = req.body;
+	app.post("/adminUsers", asyncHandler(async (req, res, next) => {
+		if(req.password === req.confirm){
+			const {password, name, email} = req.body;
+			checkRole(req.body.role);
+			const role = await Role.findOne({role: req.body.role});
+			const user = new AdminUser({...req.body, role: role._id})
+			const userSave = await user.save();
+			const data = {...userSave._doc, role: userSave._doc.role.role };
 
-				validator(password, pattern.password.reg, pattern.password.message);
-
-				const candidate = await AdminUser.findOne({ email });
-				if(candidate){
-					throw new Error( "This user already exists!.");
-				};
-
-				checkRole(req.body.role);
-
-				const hashPassword = await bcrypt.hash(password, 10);
-				const role = await Role.findOne({role: req.body.role});
-				const user = new AdminUser({...req.body,
-					password: hashPassword,
-					role: role._id,
-					lowerName: req.body.name.toLowerCase(),
-					lowerDepartment: req.body.department.toLowerCase()
-				})
-				const userSave = await user.save();
-				const result = {
-					name: userSave.name,
-					_id: userSave._id,
-					email: userSave.email,
-					phone: userSave.phone,
-					department: userSave.department,
-					role: userSave.role.role
-				};
-
-				res.send({
-					status: "Success",
-					result
-				});
-				const htmlBody = letterAddUser(name, password);
-				sendMail(name, email, "Inform letter", htmlBody);
-			}
-		}catch (err) {
-			res.send({
-				status: "Error",
-				message: err.message
-
-			})
+			res.status(201).json({
+				success: true,
+				data
+			});
+			const htmlBody = letterAddUser(name, password);
+			sendMail(name, email, "Inform letter", htmlBody);
+		}else {
+			return next(new ErrorResponse("Please check password and clearly confirm it.", 400))
 		}
-	})
+	}))
 }

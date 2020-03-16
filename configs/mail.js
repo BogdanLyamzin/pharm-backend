@@ -7,11 +7,10 @@ module.exports = {
 				 <p>Login: ${name}</p>
 				 <p>Password: ${password}</p>`;
 	},
-	letterUpdateUser(name, password){
+	letterUpdateUser(name){
 		return  `<h2>Hello, ${name}</h2>
 				 <p>Your account was updated on Pharm.</p>
-				 <p>Login: ${name}</p>
-				 <p>Password: ${password}</p>`
+				 <p>Login: ${name}</p>`
 	}
 
 }
