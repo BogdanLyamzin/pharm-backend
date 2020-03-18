@@ -9,7 +9,7 @@ const deleteRole = require("./roles/deletRole");
 const updateRole = require("./roles/updateRole");
 const getRoles = require("./roles/getRoles");
 
-const generatePassword = require("./password/generatePassword");
+
 
 const getAllProducts = require("./product/getAllProducts")
 
@@ -26,7 +26,6 @@ module.exports = (server) => {
 	deleteRole(server);
 	updateRole(server);
 	getRoles(server);
-	generatePassword(server);
 	getAllProducts(server)
 
 }
