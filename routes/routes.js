@@ -11,7 +11,9 @@ const getRoles = require("./roles/getRoles");
 
 
 
-const getAllProducts = require("./product/getAllProducts")
+const getAllProducts = require("./product/getAllProducts");
+
+const addCategory = require("./category/addCategory");
 
 
 
@@ -26,6 +28,7 @@ module.exports = (server) => {
 	deleteRole(server);
 	updateRole(server);
 	getRoles(server);
-	getAllProducts(server)
+	getAllProducts(server);
+	addCategory(server)
 
 }
