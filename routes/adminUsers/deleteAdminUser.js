@@ -1,4 +1,4 @@
-const AdminUser = require("../../models/adminUser");
+const AdminUser = require("../../models/AdminUser");
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async");
 

@@ -1,5 +1,9 @@
 const advancedResults = (model, popModel, path) => async (req, res, next) => {
+
   let query;
+  if(req.params.lan){
+    console.log(req.params.lan)
+  }
 
   // Copy req.query
   const reqQuery = { ...req.query };

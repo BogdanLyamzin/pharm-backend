@@ -1,8 +1,8 @@
-const AdminUser = require("../../models/adminUser");
+const AdminUser = require("../../models/AdminUser");
 const sendMail = require("../../utils/sendMail");
 const { letterAddUser } = require("../../configs/mail");
 const checkRole = require("../../utils/checkRole");
-const Role = require("../../models/role");
+const Role = require("../../models/Role");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
 

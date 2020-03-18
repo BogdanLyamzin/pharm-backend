@@ -11,6 +11,8 @@ const getRoles = require("./roles/getRoles");
 
 const generatePassword = require("./password/generatePassword");
 
+const getAllProducts = require("./product/getAllProducts")
+
 
 
 
@@ -25,5 +27,6 @@ module.exports = (server) => {
 	updateRole(server);
 	getRoles(server);
 	generatePassword(server);
+	getAllProducts(server)
 
 }

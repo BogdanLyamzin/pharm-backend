@@ -1,5 +1,5 @@
-const AdminUser = require("../../models/adminUser");
-const Role = require("../../models/role");
+const AdminUser = require("../../models/AdminUser");
+const Role = require("../../models/Role");
 const sendMail = require("../../utils/sendMail");
 const checkRole = require("../../utils/checkRole");
 const { letterUpdateUser } = require("../../configs/mail");

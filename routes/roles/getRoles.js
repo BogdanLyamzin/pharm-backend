@@ -1,4 +1,4 @@
-const Role = require("../../models/role");
+const Role = require("../../models/Role");
 const asyncHandler = require("../../middleware/async");
 const advancedResults = require("../../middleware/advancedResults");
 
