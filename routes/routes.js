@@ -14,6 +14,8 @@ const getRoles = require("./roles/getRoles");
 const getAllProducts = require("./product/getAllProducts");
 const addProduct = require("./product/addProduct");
 const deleteProduct = require("./product/deleteProduct");
+const updateProduct = require("./product/updateProduct");
+const getProduct = require("./product/getProduct");
 
 const addCategory = require("./category/addCategory");
 const deleteCategory = require("./category/deteteCategory");
@@ -35,8 +37,11 @@ module.exports = (server) => {
 	getAllProducts(server);
 	addProduct(server);
 	deleteProduct(server);
+	updateProduct(server);
+	getProduct(server);
 	addCategory(server);
 	deleteCategory(server);
-	updateCategory(server)
+	updateCategory(server);
+
 
 }

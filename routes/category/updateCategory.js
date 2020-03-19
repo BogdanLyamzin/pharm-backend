@@ -22,7 +22,14 @@ module.exports = (app) => {
 		};
 		const updateBody = {};
 		const strPath = `content.${lan}`;
-		updateBody[strPath] = {...category[strPath], ...qerBody};
+		const oldData = {};
+		const obj = {...category.content[lan]};
+		for (let key in obj){
+			if(obj[key]){
+				oldData[key] = obj[key];
+			}
+		};
+		updateBody[strPath] = {...oldData, ...qerBody};
 		if(req.body.uniqueCC){
 			updateBody.uniqueCC = req.body.uniqueCC
 		};
