@@ -6,7 +6,7 @@ const schemaCategory = Schema({
 		type: String,
 		trim: true,
 		unique: true,
-		required: true,
+		required: [true, "Please add unique category cord"],
 	},
 	ru: {
 		type: Boolean,

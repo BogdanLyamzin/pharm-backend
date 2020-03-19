@@ -6,7 +6,7 @@ const schemaProduct = Schema({
 		type: String,
 		trim: true,
 		unique: true,
-		required: true,
+		required: [true, "Please add unique product cord"],
 	},
 	ru: {
 		type: Boolean,
@@ -18,7 +18,8 @@ const schemaProduct = Schema({
 	},
 	category: {
 		type: Types.ObjectId,
-		ref: "Category"
+		ref: "Category",
+		required: [true, "Please choose category."],
 	},
 	content: {
 		ua: {
