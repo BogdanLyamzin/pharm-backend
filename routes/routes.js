@@ -16,7 +16,8 @@ const addProduct = require("./product/addProduct");
 const deleteProduct = require("./product/deleteProduct");
 
 const addCategory = require("./category/addCategory");
-const deleteCategory = require("./category/deteteCategory")
+const deleteCategory = require("./category/deteteCategory");
+const updateCategory = require("./category/updateCategory");
 
 
 
@@ -35,6 +36,7 @@ module.exports = (server) => {
 	addProduct(server);
 	deleteProduct(server);
 	addCategory(server);
-	deleteCategory(server)
+	deleteCategory(server);
+	updateCategory(server)
 
 }
