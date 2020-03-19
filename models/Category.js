@@ -64,4 +64,12 @@ const schemaCategory = Schema({
 	},
 });
 
+// Cascade delete products when a category is deleted
+schemaCategory.pre("remove", async function(next) {
+	console.log(`Products being removed from category ${this._id}`);
+	await this.model("Product").deleteMany({ category: this._id });
+	next();
+});
+
+
 module.exports = model("Category", schemaCategory);

@@ -7,6 +7,10 @@ const asyncHandler = require("../../middleware/async")
 module.exports = (app) => {
 	app.get("/:lan/products", advancedResults(Product), asyncHandler(async (req, res, next) => {
 
-		res.status(200).json( req.params.lan);
+		const value = res.advancedResults;
+
+		res.status(200).json( value);
+
+		
 	}))
 }
