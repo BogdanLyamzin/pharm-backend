@@ -39,6 +39,7 @@ module.exports = (app) => {
 				return next(new ErrorResponse(`At first add a parent category or add a title on ${lan} of it`, 400));
 			};
 			savedBody.categoryParent = id;
+
 		};
 		savedBody.uniqueCC = req.body.uniqueCC;
 		savedBody[lan] = true;

@@ -20,6 +20,7 @@ const getProduct = require("./product/getProduct");
 const addCategory = require("./category/addCategory");
 const deleteCategory = require("./category/deteteCategory");
 const updateCategory = require("./category/updateCategory");
+const getCategory = require("./category/getCategory");
 
 
 
@@ -42,6 +43,6 @@ module.exports = (server) => {
 	addCategory(server);
 	deleteCategory(server);
 	updateCategory(server);
-
+	getCategory(server);
 
 }
