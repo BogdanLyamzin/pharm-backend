@@ -1,25 +1,58 @@
 const advancedResults = (model, popModel, path) => async (req, res, next) => {
 
   let query;
-  if(req.params.lan){
-    console.log(req.params.lan)
-  }
-
   // Copy req.query
   const reqQuery = { ...req.query };
-
-  if(path && reqQuery[path]){
-   const findObj ={};
-    findObj[path] = reqQuery[path];
-    const res = await popModel.find(findObj);
-    reqQuery[path] = res[0]._id;
-  }
 
   // Fields to exclude
   const removeFields = ["select", "sort", "page", "limit"];
 
   // Loop over removeFields and delete them from reqQuery
   removeFields.forEach(param => delete reqQuery[param]);
+
+  //Unchangeable keys
+  const unchKeys = ["uniquePC", "uniqueCC", "category", "categoryParent", "price", "photo"];
+
+  //Modify object of query
+  if(req.params.lan){
+    unchKeys.forEach(param => delete reqQuery[param]);
+    for(let key in reqQuery){
+      if(req.params.lan !== "all"){
+        const keyStr = `content.${req.params.lan}.${key}`;
+        reqQuery[keyStr] = reqQuery[key];
+      }
+      delete reqQuery[key];
+    };
+    unchKeys.forEach(param => {
+      if (req.query[param]){
+        reqQuery[param] = req.query[param]
+      }
+    });
+  }
+
+  if(path && req.query[path]){
+    const findObj ={};
+    if(req.params.lan && req.params.lan !== "all"){
+      const str = `content.${req.params.lan}.title`
+      findObj[str] = reqQuery[path];
+      const res = await popModel.findOne(findObj);
+      if(res){
+        reqQuery[path] = res._id;
+      }else {
+        delete reqQuery[path]
+      }
+
+    }else if(!req.params.lan){
+      findObj[path] = reqQuery[path];
+      const res = await popModel.findOne(findObj);
+
+      if(res){
+        reqQuery[path] = res._id;
+      }else {
+        delete reqQuery[path]
+      }
+    }
+  }
 
   // Create query string
   let queryStr = JSON.stringify(reqQuery);
@@ -33,14 +66,33 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
 
   // Select Fields GET /..?select=field1:field2
   if (req.query.select) {
-    const fields = req.query.select.split(':').join(' ');
-    query = query.select(fields);
+    const fields = req.query.select.split(':');
+    if(req.params.lan ){
+
+      fields.forEach((field, index) => {
+        if(unchKeys.includes(field)){
+          fields[index] = field;
+        }else {
+          if(req.params.lan !== "all"){
+            fields[index] = `content.${req.params.lan}.${field}`;
+          }else {
+            fields[index] = `content.ua.${field}`;
+            fields[fields.length + 1] = `content.ru.${field}`;
+          }
+        }
+      })
+    }
+    query = query.select(fields.join(" "));
   }
 
   // Sort GET /..?sort=field:desc
   if (req.query.sort) {
     let sortBy = "";
     const parts = req.query.sort.split(':');
+    if(req.params.lan !== "all" && !unchKeys.includes(parts[0])){
+      const value = parts[0];
+      parts[0] = `content.${req.params.lan}.${value}`
+    }
     sortBy = parts[1] === 'desc' ? `-${parts[0]}` : `${parts[0]}`;
     query = query.sort(sortBy);
   }

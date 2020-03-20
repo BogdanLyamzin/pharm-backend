@@ -1,22 +1,24 @@
-const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const advancedResults = require("../../middleware/advancedResults");
 const asyncHandler = require("../../middleware/async")
 
 
 module.exports = (app) => {
-	app.get("/:lan/products", advancedResults(Product, Category, "category"), asyncHandler(async (req, res, next) => {
+	app.get("/:lan/categories", advancedResults(Category, Category, "categoryParent"), asyncHandler(async (req, res, next) => {
 
 		const data = res.advancedResults;
 		if(req.params.lan === "all"){
 			const resArr = data.data;
 			resArr.forEach((obj, index) =>{
 				resArr[index] = {
-					cord: obj.uniquePC,
-					price: obj.price,
+					cord: obj.uniqueCC,
 					photo: obj.photo,
-					ua: {...obj.content.ua, category: obj.category.content.ua.title},
-					ru: {...obj.content.ru, category: obj.category.content.ru.title}
+					ua: {...obj.content.ua},
+					ru: {...obj.content.ru}
+				}
+				if(obj.categoryParent){
+					resArr[index].ru.parentCategory = obj.categoryParent.content.ru.title;
+					resArr[index].ua.parentCategory = obj.categoryParent.content.ua.title;
 				}
 			});
 			data.data = resArr;
@@ -25,10 +27,13 @@ module.exports = (app) => {
 		const resArr = data.data;
 		resArr.forEach((obj, index) => {
 			resArr[index] = {...obj.content[req.params.lan],
-				price: obj.price,
-				cord: obj.uniquePC,
-				category: obj.category.content[req.params.lan].title,
+
+				cord: obj.uniqueCC,
 				photo: obj.photo
+			}
+			if(obj.categoryParent){
+				resArr[index].parentCategory = obj.categoryParent.content[req.params.lan].title
+
 			}
 		})
 		data.data = resArr;
