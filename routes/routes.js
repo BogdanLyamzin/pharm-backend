@@ -16,12 +16,14 @@ const addProduct = require("./product/addProduct");
 const deleteProduct = require("./product/deleteProduct");
 const updateProduct = require("./product/updateProduct");
 const getProduct = require("./product/getProduct");
+const productUploadPhoto = require("./product/productUploadPhoto");
 
 const addCategory = require("./category/addCategory");
 const deleteCategory = require("./category/deteteCategory");
 const updateCategory = require("./category/updateCategory");
 const getCategory = require("./category/getCategory");
 const getAllCategories = require("./category/getAllCategories");
+const categoryPhotoUpload = require("./category/categoryPhotoUpload");
 
 
 
@@ -41,10 +43,12 @@ module.exports = (server) => {
 	deleteProduct(server);
 	updateProduct(server);
 	getProduct(server);
+	productUploadPhoto(server);
 	addCategory(server);
 	deleteCategory(server);
 	updateCategory(server);
 	getCategory(server);
-	getAllCategories(server)
+	getAllCategories(server);
+	categoryPhotoUpload(server);
 
 }

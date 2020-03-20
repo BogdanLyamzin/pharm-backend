@@ -3,6 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const fileupload = require("express-fileupload");
 
 const errorHandler = require("./middleware/error");
 
@@ -14,6 +15,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
+
+// File uploading
+app.use(fileupload());
 
 mongoose.connect(db, {
 	useNewUrlParser: true,
