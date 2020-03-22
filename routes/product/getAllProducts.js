@@ -12,6 +12,7 @@ module.exports = (app) => {
 			const resArr = data.data;
 			resArr.forEach((obj, index) =>{
 				resArr[index] = {
+					_id: obj._id,
 					cord: obj.uniquePC,
 					price: obj.price,
 					photo: obj.photo,
@@ -25,6 +26,7 @@ module.exports = (app) => {
 		const resArr = data.data;
 		resArr.forEach((obj, index) => {
 			resArr[index] = {...obj.content[req.params.lan],
+				_id: obj._id,
 				price: obj.price,
 				cord: obj.uniquePC,
 				category: obj.category.content[req.params.lan].title,

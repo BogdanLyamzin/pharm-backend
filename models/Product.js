@@ -31,7 +31,6 @@ const schemaProduct = Schema({
 			},
 			productName: {
 				type: String,
-				unique: true,
 				trim: true,
 				minlength: 3,
 			},
@@ -81,7 +80,6 @@ const schemaProduct = Schema({
 			},
 			productName: {
 				type: String,
-				unique: true,
 				trim: true,
 				minlength: 3,
 			},

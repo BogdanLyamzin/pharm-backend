@@ -16,13 +16,14 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   //Modify object of query
   if(req.params.lan){
     unchKeys.forEach(param => delete reqQuery[param]);
-    for(let key in reqQuery){
-      if(req.params.lan !== "all"){
+    if(req.params.lan !== "all"){
+      for(let key in reqQuery){
         const keyStr = `content.${req.params.lan}.${key}`;
         reqQuery[keyStr] = reqQuery[key];
-      }
-      delete reqQuery[key];
-    };
+        delete reqQuery[key];
+      };
+      reqQuery[req.params.lan] = true;
+    }
     unchKeys.forEach(param => {
       if (req.query[param]){
         reqQuery[param] = req.query[param]

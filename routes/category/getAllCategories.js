@@ -11,6 +11,7 @@ module.exports = (app) => {
 			const resArr = data.data;
 			resArr.forEach((obj, index) =>{
 				resArr[index] = {
+					_id: obj._id,
 					cord: obj.uniqueCC,
 					photo: obj.photo,
 					ua: {...obj.content.ua},
@@ -29,7 +30,8 @@ module.exports = (app) => {
 			resArr[index] = {...obj.content[req.params.lan],
 
 				cord: obj.uniqueCC,
-				photo: obj.photo
+				photo: obj.photo,
+				_id: obj._id
 			}
 			if(obj.categoryParent){
 				resArr[index].parentCategory = obj.categoryParent.content[req.params.lan].title
