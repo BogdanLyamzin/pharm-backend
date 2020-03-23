@@ -62,6 +62,10 @@ const schemaCategory = Schema({
 		type: [String],
 		default: ['no-photo.jpg']
 	},
+	createdAt: {
+		type: Date,
+		default: Date.now
+	}
 });
 
 module.exports = model("Category", schemaCategory);

@@ -12,8 +12,11 @@ const schemaRole = new Schema({
 		unique: true,
 		validate: funValidator.role,
 	},
-	allowPages: [String]
-
+	allowPages: [String],
+	createdAt: {
+		type: Date,
+		default: Date.now
+	}
 });
 
 module.exports = model("Role", schemaRole);

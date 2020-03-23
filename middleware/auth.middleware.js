@@ -11,7 +11,7 @@ module.exports = (req, res, next) => 	{
 			return res.status(401).json({ message: "Нет авторизации"})
 		};
 
-		const decoded = jwt.verify(token, require("./configs/db").secretOrKey); ///????
+		const decoded = jwt.verify(token, require("./configs/db").jwt.secret); ///????
 		req.adminUser = decoded;
 		next()
 	}catch (e) {

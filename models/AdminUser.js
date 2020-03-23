@@ -1,7 +1,9 @@
 const { Schema, model, Types } = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { name, password, email, department, phone } = require("../utils/validatorPattern");
 const createValidate = require("../utils/validator");
+const {tokens, secret} = require("../configs/db").jwt;
 
 const funValidator = createValidate( name, password, email, department, phone);
 
@@ -44,6 +46,12 @@ const schemaAdminUser = Schema({
 		required: [true, password.required],
 		select: false,
 		validate: funValidator.password,
+	},
+	resetPasswordToken: String,
+	resetPasswordExpire: Date,
+	createdAt: {
+		type: Date,
+		default: Date.now
 	}
 });
 
@@ -55,6 +63,17 @@ schemaAdminUser.pre('save', async function(next) {
 	const salt = await bcrypt.genSalt(10);
 	this.password = await bcrypt.hash(this.password, salt);
 });
+
+// Sign JWT and return
+schemaAdminUser.methods.getSignedJwtToken = function() {
+	const payload = {
+		id: this._id,
+		type: tokens.access.type,
+	};
+	return jwt.sign(payload, secret, {
+		expiresIn: tokens.access.expiresIn
+	});
+};
 
 // Match user entered password to hashed password in database
 schemaAdminUser.methods.matchPassword = async function(enteredPassword) {
