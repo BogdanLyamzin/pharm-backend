@@ -1,4 +1,4 @@
-const MenuItem = require('../../../models/menuItem');
+const MenuItem = require('../../../models/MenuItem');
 
 module.exports = (app) => {
     app.delete('/menus/:menuId/items/:id', async (req, res) => {

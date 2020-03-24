@@ -1,4 +1,4 @@
-const MenuItem = require('../../../models/menuItem');
+const MenuItem = require('../../../models/MenuItem');
 
 module.exports = (app) => {
     app.get("/menus/:id/items/:key", async (req, res) => {

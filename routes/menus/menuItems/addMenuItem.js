@@ -1,4 +1,4 @@
-const MenuItem = require('../../../models/menuItem');
+const MenuItem = require('../../../models/MenuItem');
 
 module.exports = (app) => {
     app.post('/menus/:menuId/items', async (req, res) => {
@@ -20,7 +20,7 @@ module.exports = (app) => {
         } catch (err) {
             res.send({
                 status: "Error",
-                message: err,
+                message: err.message,
             });
         }
     });
