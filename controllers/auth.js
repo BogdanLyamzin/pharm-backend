@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const rateLimit = require("express-rate-limit");
 const authHelper = require('../helpers/authHelper');
 const {secret} = require('../config/db').jwt;
 
