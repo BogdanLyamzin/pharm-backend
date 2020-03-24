@@ -65,6 +65,10 @@ const schemaCategory = Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now
+	},
+	author: {
+		type: Types.ObjectId,
+		ref: 'AdminUser',
 	}
 });
 

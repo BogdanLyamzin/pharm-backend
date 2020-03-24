@@ -2,10 +2,11 @@ const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async");
+const { protect } = require("../../middleware/auth");
 
 // lan: all|ru|ua
 module.exports = (app) => {
-	app.get("/:lan/products/:id", asyncHandler(async (req, res, next) => {
+	app.get("/:lan/products/:id", protect, asyncHandler(async (req, res, next) => {
 		const product = await Product.findById(req.params.id);
 
 		if (!product) {

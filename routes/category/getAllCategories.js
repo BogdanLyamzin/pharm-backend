@@ -1,10 +1,10 @@
 const Category = require("../../models/Category");
 const advancedResults = require("../../middleware/advancedResults");
 const asyncHandler = require("../../middleware/async")
-
+const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.get("/:lan/categories", advancedResults(Category, Category, "categoryParent"), asyncHandler(async (req, res, next) => {
+	app.get("/:lan/categories", protect, advancedResults(Category, Category, "categoryParent"), asyncHandler(async (req, res, next) => {
 
 		const data = res.advancedResults;
 		if(req.params.lan === "all"){

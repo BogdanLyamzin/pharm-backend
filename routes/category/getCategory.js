@@ -1,10 +1,11 @@
 const Category = require("../../models/Category");
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async");
+const { protect } = require("../../middleware/auth");
 
 // lan: all|ru|ua
 module.exports = (app) => {
-	app.get("/:lan/categories/:id", asyncHandler(async (req, res, next) => {
+	app.get("/:lan/categories/:id", protect, asyncHandler(async (req, res, next) => {
 		const category = await Category.findById(req.params.id);
 
 		if (!category) {

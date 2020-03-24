@@ -1,5 +1,7 @@
 const { Schema, model, Types } = require("mongoose");
 const bcrypt = require("bcrypt");
+const CryptoJS = require("crypto-js");
+const uuid = require("uuid").v4;
 const jwt = require("jsonwebtoken");
 const { name, password, email, department, phone } = require("../utils/validatorPattern");
 const createValidate = require("../utils/validator");
@@ -65,7 +67,7 @@ schemaAdminUser.pre('save', async function(next) {
 });
 
 // Sign JWT and return
-schemaAdminUser.methods.getSignedJwtToken = function() {
+schemaAdminUser.methods.generatorAccessToken = function() {
 	const payload = {
 		id: this._id,
 		type: tokens.access.type,
@@ -80,6 +82,17 @@ schemaAdminUser.methods.matchPassword = async function(enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Generate temporary token
+schemaAdminUser.methods.generatorResetPasswordToken = function() {
+	// Generate token
+	this.resetPasswordToken = uuid();
+	const resetToken = CryptoJS.AES.encrypt(this.resetPasswordToken, secret).toString();
+	console.log(resetToken);
 
+	// Set expire (10 m)
+	this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+	return resetToken;
+};
 
 module.exports = model("AdminUser", schemaAdminUser);

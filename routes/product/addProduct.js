@@ -2,10 +2,11 @@ const Product = require("../../models/Product");
 const ErrorResponse = require("../../utils/errorResponse");
 const asyncHandler = require("../../middleware/async");
 const checkCategory = require("../../utils/checkCategory");
+const { protect } = require("../../middleware/auth");
 
 
 module.exports = (app) => {
-	app.post("/:lan/products", asyncHandler(async (req, res, next) => {
+	app.post("/:lan/products", protect, asyncHandler(async (req, res, next) => {
 		const lan = req.params.lan;
 		const bodyObj = {...req.body};
 		delete bodyObj.uniquePC;
@@ -27,6 +28,7 @@ module.exports = (app) => {
 			};
 			updatedBody.content = {...product[0].content};
 			updatedBody.content[lan] = bodyObj;
+			updatedBody.author = req.adminUser._id;
 			updatedBody[lan] = true;
 			await Product.findByIdAndUpdate(product[0]._id, updatedBody);
 			const data = await Product.findById(product[0]._id);
@@ -49,6 +51,7 @@ module.exports = (app) => {
 		savedBody[lan] = true;
 		savedBody.content = {};
 		savedBody.content[lan] = bodyObj;
+		savedBody.author = req.adminUser._id;
 		const savedProduct = new Product(savedBody);
 		const data = await savedProduct.save();
 

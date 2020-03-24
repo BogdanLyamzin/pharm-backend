@@ -3,6 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 const fileupload = require("express-fileupload");
 
 const errorHandler = require("./middleware/error");
@@ -12,6 +13,8 @@ const db = require("./configs/db").mongoURI;
 
 const app = express();
 app.use(bodyParser.json());
+//Cookie parser
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());

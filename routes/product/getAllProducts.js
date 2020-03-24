@@ -2,10 +2,10 @@ const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const advancedResults = require("../../middleware/advancedResults");
 const asyncHandler = require("../../middleware/async")
-
+const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.get("/:lan/products", advancedResults(Product, Category, "category"), asyncHandler(async (req, res, next) => {
+	app.get("/:lan/products", protect, advancedResults(Product, Category, "category"), asyncHandler(async (req, res, next) => {
 
 		const data = res.advancedResults;
 		if(req.params.lan === "all"){

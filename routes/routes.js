@@ -25,6 +25,13 @@ const getCategory = require("./category/getCategory");
 const getAllCategories = require("./category/getAllCategories");
 const categoryPhotoUpload = require("./category/categoryPhotoUpload");
 
+const generatePassword = require("./password/generatePassword");
+
+const login = require("./auth/login");
+const logout = require("./auth/logout");
+const updatePassword = require("./auth/updatePassword");
+const forgotPassword = require("./auth/forgotPassword");
+const resetPassword = require("./auth/resetPassword");
 
 
 
@@ -50,5 +57,12 @@ module.exports = (server) => {
 	getCategory(server);
 	getAllCategories(server);
 	categoryPhotoUpload(server);
+	generatePassword(server);
+
+	login(server);
+	logout(server);
+	updatePassword(server);
+	forgotPassword(server);
+	resetPassword(server);
 
 }

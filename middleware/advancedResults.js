@@ -11,7 +11,7 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   removeFields.forEach(param => delete reqQuery[param]);
 
   //Unchangeable keys
-  const unchKeys = ["uniquePC", "uniqueCC", "category", "categoryParent", "price", "photo"];
+  const unchKeys = ["uniquePC", "uniqueCC", "category", "categoryParent", "price", "photo", "author", "createdAt"];
 
   //Modify object of query
   if(req.params.lan){

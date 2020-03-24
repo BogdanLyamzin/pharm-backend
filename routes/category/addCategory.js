@@ -2,10 +2,11 @@ const Caregory = require("../../models/Category");
 const ErrorResponse = require("../../utils/errorResponse");
 const asyncHandler = require("../../middleware/async");
 const checkCategory = require("../../utils/checkCategory");
+const { protect } = require("../../middleware/auth");
 
 
 module.exports = (app) => {
-	app.post("/:lan/categories", asyncHandler(async (req, res, next) => {
+	app.post("/:lan/categories", protect, asyncHandler(async (req, res, next) => {
 		const lan = req.params.lan;
 		const bodyObj = {...req.body};
 		delete bodyObj.uniqueCC;
@@ -23,6 +24,7 @@ module.exports = (app) => {
 			const updatedBody = {};
 			updatedBody.content = {...category[0].content};
 			updatedBody.content[lan] = bodyObj;
+			updatedBody.author = req.adminUser._id;
 			updatedBody[lan] = true;
 			await Caregory.findByIdAndUpdate(category[0]._id, updatedBody);
 			const data = await Caregory.findById(category[0]._id);
@@ -44,6 +46,7 @@ module.exports = (app) => {
 		savedBody.uniqueCC = req.body.uniqueCC;
 		savedBody[lan] = true;
 		savedBody.content = {};
+		savedBody.author = req.adminUser._id;
 		savedBody.content[lan] = bodyObj;
 		const savedCategory = new Caregory(savedBody);
 		const data = await savedCategory.save();

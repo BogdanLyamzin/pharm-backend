@@ -1,9 +1,10 @@
 const Role = require("../../models/Role");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
+const { protect, authorize } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.put("/roles/:id",  asyncHandler(async (req, res, next) => {
+	app.put("/roles/:id", protect, authorize("admin"),  asyncHandler(async (req, res, next) => {
 		const id = req.params.id;
 		const qerBody = {...req.body};
 		const role = await Role.findById(id);

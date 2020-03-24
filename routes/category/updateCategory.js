@@ -2,9 +2,10 @@ const Category = require("../../models/Category");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
 const checkCategory = require("../../utils/checkCategory");
+const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.put("/:lan/categories/:id", asyncHandler(async (req, res, next) => {
+	app.put("/:lan/categories/:id", protect, asyncHandler(async (req, res, next) => {
 		const id = req.params.id;
 		const lan = req.params.lan;
 		const qerBody = {...req.body};

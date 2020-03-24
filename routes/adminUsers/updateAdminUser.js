@@ -5,9 +5,10 @@ const checkRole = require("../../utils/checkRole");
 const { letterUpdateUser } = require("../../configs/mail");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
+const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.put("/adminUsers/:id", asyncHandler(async (req, res, next) => {
+	app.put("/adminUsers/:id", protect, asyncHandler(async (req, res, next) => {
 		const id = req.params.id;
 		const qerBody = {...req.body};
 
@@ -16,6 +17,10 @@ module.exports = (app) => {
 		if (!adminUser) {
 			return next(new ErrorResponse(`User not found with id of ${req.params.id}`, 404));
 		};
+
+		if(adminUser._id.toString() !== req.user.id && req.user.role.role !== 'admin'){
+			new ErrorResponse(`User ${req.user.id} is not authorized to update this data`, 401)
+		}
 
 		if(qerBody.role){
 			checkRole(qerBody.role);
@@ -40,6 +45,10 @@ module.exports = (app) => {
 			data
 		});
 		const htmlBody = letterUpdateUser(data.name);
-		sendMail(data.name, data.email, "Inform letter", htmlBody);
+		sendMail({
+			email: data.email,
+			subject: 'Your account has been updated',
+			html: htmlBody
+		});
 	}))
 }

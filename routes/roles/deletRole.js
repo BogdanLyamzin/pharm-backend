@@ -1,10 +1,11 @@
 const Role = require("../../models/Role");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
+const { protect, authorize } = require("../../middleware/auth");
 
 // @access   ???
 module.exports = (app) => {
-	app.delete("/roles/:id", asyncHandler(async (req, res, next) => {
+	app.delete("/roles/:id", protect, authorize("admin"), asyncHandler(async (req, res, next) => {
 		//What doing with adminUsers which ref with it???
 		//pages???
 		const role = await Role.findById(req.params.id);

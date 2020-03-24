@@ -3,9 +3,10 @@ const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
 const path = require("path");
 const key = require("../../configs/upload");
+const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
-	app.put("/products/:id/photo", asyncHandler(async (req, res, next) => {
+	app.put("/products/:id/photo", protect, asyncHandler(async (req, res, next) => {
 		const id = req.params.id;
 
 		const product = await Product.findById(id);
