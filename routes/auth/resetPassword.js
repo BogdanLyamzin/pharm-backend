@@ -7,8 +7,9 @@ const { secret } = require("../../configs/db").jwt;
 
 module.exports = (app) => {
 	app.put("/resetpassword/:resettoken", asyncHandler(async (req, res, next) => {
-		const bytes  = CryptoJS.AES.decrypt(req.params.resettoken, 'secret key 123');
+		const bytes  = CryptoJS.AES.decrypt(req.params.resettoken, secret);
 		const resetPasswordToken = bytes.toString(CryptoJS.enc.Utf8);
+		console.log(resetPasswordToken)
 
 		const adminUser = await AdminUser.findOne({
 			resetPasswordToken,

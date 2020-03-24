@@ -25,7 +25,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
 		// Verify token
 		const decoded = jwt.verify(token, secret);
 		req.adminUser = await AdminUser.findById(decoded.id).populate({path: "role", select: "role"});
-		console.log(req.adminUser)
 		next();
 	} catch (err) {
 		return next(new ErrorResponse('Not authorized to access this route', 401));

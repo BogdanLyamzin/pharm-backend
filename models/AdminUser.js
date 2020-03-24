@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require("mongoose");
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
-const uuid = require("uuid").v4;
+const generator = require("generate-password");
 const jwt = require("jsonwebtoken");
 const { name, password, email, department, phone } = require("../utils/validatorPattern");
 const createValidate = require("../utils/validator");
@@ -85,7 +85,13 @@ schemaAdminUser.methods.matchPassword = async function(enteredPassword) {
 // Generate temporary token
 schemaAdminUser.methods.generatorResetPasswordToken = function() {
 	// Generate token
-	this.resetPasswordToken = uuid();
+	this.resetPasswordToken = generator.generate({
+		length: 6,
+		numbers: true,
+		uppercase: false,
+		symbols: false
+	});
+	console.log(this.resetPasswordToken)
 	const resetToken = CryptoJS.AES.encrypt(this.resetPasswordToken, secret).toString();
 	console.log(resetToken);
 
