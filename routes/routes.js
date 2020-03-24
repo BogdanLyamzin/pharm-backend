@@ -32,6 +32,7 @@ const logout = require("./auth/logout");
 const updatePassword = require("./auth/updatePassword");
 const forgotPassword = require("./auth/forgotPassword");
 const resetPassword = require("./auth/resetPassword");
+const getMe = require("./auth/getMe");
 
 
 
@@ -64,5 +65,5 @@ module.exports = (server) => {
 	updatePassword(server);
 	forgotPassword(server);
 	resetPassword(server);
-
+	getMe(server);
 }
