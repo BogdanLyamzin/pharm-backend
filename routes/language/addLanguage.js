@@ -26,23 +26,3 @@ exports.addLanguage = (app) => {
         }
     });
 };
-
-
-
-exports.languageUa = (app)=> {
-    app.get( "/ua", (req, res) => {
-        res.send( 'ua' )
-    });
-};
-
-exports.language = (app)=> {
-    app.get( "/ru", (req, res) => {
-        res.send( 'ru' )
-    });
-};
-
-exports.language = (app)=> {
-    app.get( "/en", (req, res) => {
-        res.send( 'en' )
-    });
-};
