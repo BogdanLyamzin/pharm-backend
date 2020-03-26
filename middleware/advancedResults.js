@@ -55,7 +55,6 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
     }
   };
 
-
   // Create query string
   let queryStr = JSON.stringify(reqQuery);
 
