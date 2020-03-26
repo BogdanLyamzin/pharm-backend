@@ -60,8 +60,8 @@ module.exports = (app) => {
 			{$sort: {"_id": 1}}
 		]);
 
-		const data4 = await Product.find({"content.ru.productName": /ПАН/})
-		const data = await Product.find({}).sort("content.ru.productName").collation( { locale: 'ru', strength: 2 })
+		const data = await Product.find({"content.ru.productName": /пан/i})
+		const data4 = await Product.find({}).sort("content.ru.productName").collation( { locale: 'ru', strength: 2 })
 
 
 

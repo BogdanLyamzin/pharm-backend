@@ -53,7 +53,8 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
         delete reqQuery[path]
       }
     }
-  }
+  };
+
 
   // Create query string
   let queryStr = JSON.stringify(reqQuery);
@@ -61,9 +62,18 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   // Create operators ($gt, $gte, etc) GET /..?field[gt|gte|lt|lte|in]="something"
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-  // Finding resource
+  const modReqQuery = JSON.parse(queryStr);
 
-  query =  model.find(JSON.parse(queryStr));
+  //Find by substr GET / ...?field=*substr
+  for(let key in modReqQuery){
+    if(String(modReqQuery[key]).startsWith("*")){
+      const sub = modReqQuery[key].slice(1);
+      modReqQuery[key] = new RegExp(`${sub}`, "i");
+    }
+  };
+
+  // Finding resource
+  query =  model.find(modReqQuery);
 
   // Select Fields GET /..?select=field1:field2
   if (req.query.select) {
