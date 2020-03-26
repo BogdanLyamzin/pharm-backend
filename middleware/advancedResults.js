@@ -86,6 +86,12 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
     query = query.select(fields.join(" "));
   }
 
+  //	Locale
+  let locale = "ru";
+  if(req.params.lan === "ua" ){
+    locale = "uk"
+  }
+
   // Sort GET /..?sort=field:desc
   if (req.query.sort) {
     let sortBy = "";
@@ -95,7 +101,7 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
       parts[0] = `content.${req.params.lan}.${value}`
     }
     sortBy = parts[1] === 'desc' ? `-${parts[0]}` : `${parts[0]}`;
-    query = query.sort(sortBy);
+    query = query.sort(sortBy).collation( { locale: `${locale}`, strength: 2 });
   }
 
   // Pagination

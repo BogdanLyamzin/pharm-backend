@@ -8,6 +8,7 @@ const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
 	app.put("/updatepassword", protect, loginLimite, asyncHandler(async (req, res, next) => {
+
 		const adminUser = await AdminUser.findById(req.adminUser.id).select('+password');
 
 		// Check current password

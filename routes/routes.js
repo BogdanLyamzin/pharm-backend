@@ -18,6 +18,7 @@ const updateProduct = require("./product/updateProduct");
 const getProduct = require("./product/getProduct");
 const productUploadPhoto = require("./product/productUploadPhoto");
 
+
 const addCategory = require("./category/addCategory");
 const deleteCategory = require("./category/deteteCategory");
 const updateCategory = require("./category/updateCategory");
@@ -34,6 +35,8 @@ const forgotPassword = require("./auth/forgotPassword");
 const resetPassword = require("./auth/resetPassword");
 const getMe = require("./auth/getMe");
 
+
+const testProduct = require("./product/testQuery");
 
 
 module.exports = (server) => {
@@ -66,4 +69,6 @@ module.exports = (server) => {
 	forgotPassword(server);
 	resetPassword(server);
 	getMe(server);
+
+	testProduct(server)
 }
