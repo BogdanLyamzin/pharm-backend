@@ -7,7 +7,6 @@ exports.setLanguage = (app) => {
         const { language } = req.body;
         try {
             const result = await LanguageShema.findOne( { language } ).exec();
-            console.log(result)
             if ( !result ) {
                 res.send( {
                     status: "Error",

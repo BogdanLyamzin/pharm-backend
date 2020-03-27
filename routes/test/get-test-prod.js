@@ -6,19 +6,9 @@ exports.getTest = (app) => {
 
         try {
             const result = await BlogPostModel.findById(id).exec();
-            const content = {};
-            const obj = result.content;
-            console.log(obj);
-            // console.log(result)
-            // for ( let [key, value] of  Object.entries(obj)) {
-            //     console.log(`${key} : ${value}`)
-            //     Object.assign(content, {key: value});
-            // }
-            Object.assign(content, result.content);
-            delete content["$init"];
             res.send( {
                 status: "Success",
-                content
+                result
             } );
 
         } catch (err) {

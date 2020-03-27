@@ -4,7 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 cookieParser = require('cookie-parser');
 const passport = require('passport');
-
+const mongooseIntl = require('mongoose-intl');
+const langueges = require('./config/languages')
 
 const app = express();
 
@@ -18,6 +19,7 @@ require('./config/passport')(passport);
 
 app.use(cors());
 app.use(bodyParser.json());
+mongoose.plugin(mongooseIntl, langueges);
 const routes = require("./routes/");
 
 const db = require('./config/db').mongoURI;
@@ -37,3 +39,4 @@ mongoose.connection.once('open', () => {
         console.log(`Оно живо! PORT=${PORT}`)
     });
 });
+
