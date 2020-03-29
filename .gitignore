@@ -1,2 +1,7 @@
+/.idea
 node_modules/
 package-lock.json
+.gitignore
+/routes/login/register.js
+/routes/login/current.js
+tasks.txt
