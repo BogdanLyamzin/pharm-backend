@@ -1,5 +1,5 @@
 const { Schema, model, Types } = require("mongoose");
-
+const mongooseIntl = require('mongoose-intl');
 
 const schemaProduct = Schema({
 	uniquePC: {
@@ -8,118 +8,70 @@ const schemaProduct = Schema({
 		unique: true,
 		required: [true, "Please add unique product cord"],
 	},
-	ru: {
-		type: Boolean,
-		default: false
-	},
-	ua: {
-		type: Boolean,
-		default: false
+	language: {
+		type: String,
+		default: " ",
+		intl: true,
 	},
 	category: {
 		type: Types.ObjectId,
 		ref: "Category",
 		required: [true, "Please choose category."],
 	},
-	content: {
-		ua: {
-			brand: {
-				type: String,
-				trim: true,
-				uppercase: true,
-				minlength: 3,
-			},
-			productName: {
-				type: String,
-				trim: true,
-				minlength: 3,
-			},
-			INN:{
-				type: String,
-				trim: true,
-				uppercase: true,
-				minlength: 3
-			},
-			OTC_RX: {
-				type: String,
-				enum: ["OTC", "RX"],
-				uppercase: true
-			},
-			dosage: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			form: {
-				type: String,
-				trim: true,
-				minlength: 3,
-			},
-			ATC_5: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			description: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			shortDescription: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-		},
-		ru: {
-			brand: {
-				type: String,
-				trim: true,
-				uppercase: true,
-				minlength: 3,
-			},
-			productName: {
-				type: String,
-				trim: true,
-				minlength: 3,
-			},
-			INN:{
-				type: String,
-				trim: true,
-				uppercase: true,
-				minlength: 3
-			},
-			OTC_RX: {
-				type: String,
-				enum: ["OTC", "RX"],
-				uppercase: true
-			},
-			dosage: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			form: {
-				type: String,
-				trim: true,
-				minlength: 3,
-			},
-			ATC_5: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			description: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-			shortDescription: {
-				type: String,
-				trim: true,
-				minlength: 3
-			},
-		},
+	OTC_RX: {
+		type: String,
+		enum: ["OTC", "RX"],
+		uppercase: true
+	},
+	brand: {
+		type: String,
+		intl: true,
+		trim: true,
+		uppercase: true,
+		minlength: 3,
+	},
+	productName: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3,
+	},
+	INN:{
+		type: String,
+		intl: true,
+		trim: true,
+		uppercase: true,
+		minlength: 3
+	},
+	dosage: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3
+	},
+	form: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3,
+	},
+	ATC_5: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3
+	},
+	description: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3
+	},
+	shortDescription: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: 3
 	},
 	photo: {
 		type: [String],
@@ -137,8 +89,13 @@ const schemaProduct = Schema({
 		type: Types.ObjectId,
 		ref: 'AdminUser',
 	}
-});
+},
+	{
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true }
+	}
+);
 
-
+schemaProduct.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
 
 module.exports = model("Product", schemaProduct);

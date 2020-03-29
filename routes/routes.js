@@ -34,6 +34,12 @@ const updatePassword = require("./auth/updatePassword");
 const forgotPassword = require("./auth/forgotPassword");
 const resetPassword = require("./auth/resetPassword");
 
+const getMe = require("./auth/getMe");
+const test = require("./product/testQuery");
+
+const getAllTests = require("./test/getAllTests");
+const addTest = require("./test/addTest");
+
 
 module.exports = (server) => {
 	getAllAdminUser(server);
@@ -64,5 +70,10 @@ module.exports = (server) => {
 	updatePassword(server);
 	forgotPassword(server);
 	resetPassword(server);
+	getMe(server);
+	test(server)
+
+	getAllTests(server);
+	addTest(server)
 
 }

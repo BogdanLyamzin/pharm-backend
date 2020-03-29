@@ -1,55 +1,54 @@
 const Caregory = require("../../models/Category");
 const ErrorResponse = require("../../utils/errorResponse");
 const asyncHandler = require("../../middleware/async");
-const checkCategory = require("../../utils/checkCategory");
+const addIntlData = require("../../utils/addIntlData");
 const { protect } = require("../../middleware/auth");
 
 
 module.exports = (app) => {
 	app.post("/:lan/categories", protect, asyncHandler(async (req, res, next) => {
 		const lan = req.params.lan;
+		const languages = Caregory.getLanguages();
+		const defaultLanguage = Caregory.getDefaultLanguage();
 		const bodyObj = {...req.body};
 		delete bodyObj.uniqueCC;
-		delete bodyObj.categoryParent;
 
 		if(!req.body.uniqueCC && !req.body.title){
 			return next(new ErrorResponse(`Please add an unique cord category and title`, 400));
 		};
 		const category = await Caregory.find({uniqueCC: req.body.uniqueCC});
-
 		if(category.length){
-			if(category[0][lan]){
-				return next(new ErrorResponse(`This category on ${lan} already exists`, 400));
+			if(lan === "all"){
+				let check = true;
+				languages.forEach(l =>{
+					check = check && category[0].language[l] === "yes"
+				});
+				if(check){
+					return next(new ErrorResponse(`This category already exists`, 400));
+				}
+			}else if(category[0].language[lan] === "yes" ){
+					return next(new ErrorResponse(`This category on ${lan} already exists`, 400));
 			};
-			const updatedBody = {};
-			updatedBody.content = {...category[0].content};
-			updatedBody.content[lan] = bodyObj;
-			updatedBody.author = req.adminUser._id;
-			updatedBody[lan] = true;
-			await Caregory.findByIdAndUpdate(category[0]._id, updatedBody);
-			const data = await Caregory.findById(category[0]._id);
-			res.status(201).json({
+			const data = await addIntlData(lan, defaultLanguage, bodyObj, category[0], next);
+			if(!data){
+				return
+			}
+			data.author = req.adminUser._id;
+			await data.save();
+
+			return res.status(201).json({
 				success: true,
 				data
 			});
+		};
+		const newCaregory = new Caregory({uniqueCC: req.body.uniqueCC});
+		const data = await addIntlData(lan, defaultLanguage, bodyObj, newCaregory, languages, next);
+		if(!data){
 			return
-		};
-		const savedBody = {};
-		if(req.body.categoryParent){
-			const id = await checkCategory(req.body.categoryParent, lan);
-			if(!id){
-				return next(new ErrorResponse(`At first add a parent category or add a title on ${lan} of it`, 400));
-			};
-			savedBody.categoryParent = id;
+		}
+		data.author = req.adminUser._id;
 
-		};
-		savedBody.uniqueCC = req.body.uniqueCC;
-		savedBody[lan] = true;
-		savedBody.content = {};
-		savedBody.author = req.adminUser._id;
-		savedBody.content[lan] = bodyObj;
-		const savedCategory = new Caregory(savedBody);
-		const data = await savedCategory.save();
+		await data.save();
 
 		res.status(201).json({
 			success: true,

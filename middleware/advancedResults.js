@@ -1,4 +1,5 @@
 const advancedResults = (model, popModel, path) => async (req, res, next) => {
+  const defaultLanguage = model.getDefaultLanguage();
 
   let query;
   // Copy req.query
@@ -11,19 +12,21 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   removeFields.forEach(param => delete reqQuery[param]);
 
   //Unchangeable keys
-  const unchKeys = ["uniquePC", "uniqueCC", "category", "categoryParent", "price", "photo", "author", "createdAt"];
+  const unchKeys = ["uniquePC", "uniqueCC", "category", "OTC_RX", "categoryParent", "price", "photo", "author", "createdAt"];
 
   //Modify object of query
   if(req.params.lan){
     unchKeys.forEach(param => delete reqQuery[param]);
-    if(req.params.lan !== "all"){
+    if(req.params.lan === "all"){
+      reqQuery == {}
+    }else {
       for(let key in reqQuery){
-        const keyStr = `content.${req.params.lan}.${key}`;
+        const keyStr = `${key}.${req.params.lan}`;
         reqQuery[keyStr] = reqQuery[key];
         delete reqQuery[key];
       };
-      reqQuery[req.params.lan] = true;
-    }
+      reqQuery.language[req.params.lan] = "yes";
+    };
     unchKeys.forEach(param => {
       if (req.query[param]){
         reqQuery[param] = req.query[param]
@@ -34,7 +37,7 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   if(path && req.query[path]){
     const findObj ={};
     if(req.params.lan && req.params.lan !== "all"){
-      const str = `content.${req.params.lan}.title`
+      const str = `title.${req.params.lan}`
       findObj[str] = reqQuery[path];
       const res = await popModel.findOne(findObj);
       if(res){
@@ -77,28 +80,11 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   // Select Fields GET /..?select=field1:field2
   if (req.query.select) {
     const fields = req.query.select.split(':');
-    if(req.params.lan ){
-
-      fields.forEach((field, index) => {
-        if(unchKeys.includes(field)){
-          fields[index] = field;
-        }else {
-          if(req.params.lan !== "all"){
-            fields[index] = `content.${req.params.lan}.${field}`;
-          }else {
-            fields[index] = `content.ua.${field}`;
-            fields[fields.length + 1] = `content.ru.${field}`;
-          }
-        }
-      })
-    }
     query = query.select(fields.join(" "));
-  }
-
-  //	Locale
-  let locale = "ru";
-  if(req.params.lan === "ua" ){
-    locale = "uk"
+  };
+  let locale = defaultLanguage;
+  if(req.params.lan && req.params.lan !== "all"){
+    locale = req.params.lan;
   }
 
   // Sort GET /..?sort=field:desc
@@ -107,7 +93,7 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
     const parts = req.query.sort.split(':');
     if(req.params.lan !== "all" && !unchKeys.includes(parts[0])){
       const value = parts[0];
-      parts[0] = `content.${req.params.lan}.${value}`
+      parts[0] = `${value}.${req.params.lan}`
     }
     sortBy = parts[1] === 'desc' ? `-${parts[0]}` : `${parts[0]}`;
     query = query.sort(sortBy).collation( { locale: `${locale}`, strength: 2 });

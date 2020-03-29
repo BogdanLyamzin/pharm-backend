@@ -1,5 +1,5 @@
 const { Schema, model, Types } = require("mongoose");
-
+const mongooseIntl = require('mongoose-intl');
 
 const schemaCategory = Schema({
 	uniqueCC: {
@@ -8,55 +8,32 @@ const schemaCategory = Schema({
 		unique: true,
 		required: [true, "Please add unique category cord"],
 	},
-	ru: {
-		type: Boolean,
-		default: false
-	},
-	ua: {
-		type: Boolean,
-		default: false
+	language: {
+		type: String,
+		intl: true,
+		default: " "
 	},
 	categoryParent: {
 		type: Types.ObjectId,
 		ref: "Category"
 	},
-	content: {
-		ua: {
-			title: {
-				type: String,
-				unique: true,
-				trim: true,
-			},
-			description: {
-				type: String,
-				trim: true,
-				minlength: [12, "Too short description (min length 12 singles)."],
-			},
-			shortDescription:{
-				type: String,
-				trim: true,
-				minlength: [12, "Too short description (min length 12 singles)."],
-				maxlength: [100, "Too long description (max 100 singles)."],
-			},
-		},
-		ru: {
-			title: {
-				type: String,
-				unique: true,
-				trim: true,
-			},
-			description: {
-				type: String,
-				trim: true,
-				minlength: [12, "Too short description (min length 12 singles)."],
-			},
-			shortDescription:{
-				type: String,
-				trim: true,
-				minlength: [12, "Too short description (min length 12 singles)."],
-				maxlength: [100, "Too long description (max 100 singles)."],
-			},
-		}
+	title: {
+		type: String,
+		intl: true,
+		trim: true,
+	},
+	description: {
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: [12, "Too short description (min length 12 singles)."],
+	},
+	shortDescription:{
+		type: String,
+		intl: true,
+		trim: true,
+		minlength: [12, "Too short description (min length 12 singles)."],
+		maxlength: [100, "Too long description (max 100 singles)."],
 	},
 	photo: {
 		type: [String],
@@ -70,6 +47,13 @@ const schemaCategory = Schema({
 		type: Types.ObjectId,
 		ref: 'AdminUser',
 	}
-});
+},
+	{
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true }
+	}
+);
+
+schemaCategory.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
 
 module.exports = model("Category", schemaCategory);

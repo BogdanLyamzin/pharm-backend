@@ -2,9 +2,19 @@ const Category = require("../models/Category");
 
 module.exports = async function(title, lan){
 	try {
-		const strPath = `content.${lan}.title`
 		const objFind = {};
-		objFind[strPath] = title;
+	    const languages = Category.getLanguages();
+
+		if(lan !== "all"){
+			const str = `title.${lan}`;
+			objFind[str] = title;
+		}else {
+			languages.forEach(l => {
+				const str = `title.${l}`
+				objFind[str] = title[l]
+			})
+		}
+
 		const category = await Category.find(objFind);
 
 		if(category.length){

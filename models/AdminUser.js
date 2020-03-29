@@ -95,7 +95,7 @@ schemaAdminUser.methods.generatorResetPasswordToken = function() {
 	const resetToken = CryptoJS.AES.encrypt(this.resetPasswordToken, secret).toString();
 	console.log(resetToken);
 
-	// Set expire (10 m)
+	// Set expire (10m)
 	this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
 
 	return resetToken;

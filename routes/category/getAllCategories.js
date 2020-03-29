@@ -5,7 +5,7 @@ const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
 	app.get("/:lan/categories", protect, advancedResults(Category, Category, "categoryParent"), asyncHandler(async (req, res, next) => {
-
+		const languages = Category.getLanguages();
 		const data = res.advancedResults;
 		if(req.params.lan === "all"){
 			const resArr = data.data;
@@ -14,7 +14,7 @@ module.exports = (app) => {
 					_id: obj._id,
 					cord: obj.uniqueCC,
 					photo: obj.photo,
-					ua: {...obj.content.ua},
+					ua: {...obj.ua},
 					ru: {...obj.content.ru}
 				}
 				if(obj.categoryParent){
