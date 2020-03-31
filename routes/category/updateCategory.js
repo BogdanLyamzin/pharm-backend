@@ -1,7 +1,7 @@
 const Category = require("../../models/Category");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
-const checkCategory = require("../../utils/checkCategory");
+const addIntlData = require("../../utils/addIntlData");
 const { protect } = require("../../middleware/auth");
 
 module.exports = (app) => {
@@ -9,8 +9,8 @@ module.exports = (app) => {
 		const id = req.params.id;
 		const lan = req.params.lan;
 		const qerBody = {...req.body};
-		delete qerBody.uniqueCC;
-		delete qerBody.categoryParent;
+		const languages = Category.getLanguages();
+		const defaultLanguage = Category.getDefaultLanguage();
 
 		const category = await Category.findById(id);
 
@@ -21,31 +21,14 @@ module.exports = (app) => {
 		if(req.body.photo){
 			return next(new ErrorResponse("To change field 'photo' use another route", 404));
 		};
-		const updateBody = {};
-		const strPath = `content.${lan}`;
-		const oldData = {};
-		const obj = {...category.content[lan]};
-		for (let key in obj){
-			if(obj[key]){
-				oldData[key] = obj[key];
-			}
+
+		const data = await addIntlData(lan, defaultLanguage, qerBody, category, languages, next);
+		if(!data){
+			return
 		};
-		updateBody[strPath] = {...oldData, ...qerBody};
-		if(req.body.uniqueCC){
-			updateBody.uniqueCC = req.body.uniqueCC
-		};
-		if(req.body.categoryParent){
-			const idCat = await checkCategory(req.body.categoryParent, lan);
-			if(!idCat){
-				return next(new ErrorResponse(`At first, add a new parent category or add a title on ${lan} of it`, 400));
-			};
-			updateBody.categoryParent = idCat;
-		}
-		if(!category[lan]){
-			updateBody[lan] = true
-		};
-		await Category.findByIdAndUpdate(id, updateBody);
-		const data = await Category.findById(id);
+		///Temporary solution (????)
+		data.author = req.adminUser._id;
+		await data.save();
 
 		res.status(201).json({
 			success: true,

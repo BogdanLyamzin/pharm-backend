@@ -3,6 +3,7 @@ const ErrorResponse = require("./errorResponse");
 
 module.exports = async (lan, deflan, bodyObj, saveObj, languages, next) =>{
 	try {
+		const unchKeys = ["uniquePC", "uniqueCC", "OTC_RX", "price", "photo", "author", "createdAt"];
 		if(lan !== deflan && lan !== "all"){
 			for (let key in bodyObj){
 				saveObj.set(`${key}.${lan}`, bodyObj[key])
@@ -11,6 +12,13 @@ module.exports = async (lan, deflan, bodyObj, saveObj, languages, next) =>{
 
 		}else {
 			for (let key in bodyObj){
+				if(lan === "all" && !unchKeys.includes(key)){
+					languages.forEach( l => {
+						if(!bodyObj[key][l]){
+							throw new ErrorResponse(`Please, add ${key} field in ${l} language`, 400);
+						}
+					})
+				}
 				saveObj[key] = bodyObj[key]
 			}
 			if(lan !== "all"){

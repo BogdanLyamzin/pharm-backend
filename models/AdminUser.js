@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const { name, password, email, department, phone } = require("../utils/validatorPattern");
 const createValidate = require("../utils/validator");
 const {tokens, secret} = require("../configs/db").jwt;
+const mongooseIntl = require('mongoose-intl');
 
 const funValidator = createValidate( name, password, email, department, phone);
 
@@ -100,5 +101,7 @@ schemaAdminUser.methods.generatorResetPasswordToken = function() {
 
 	return resetToken;
 };
+
+schemaAdminUser.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
 
 module.exports = model("AdminUser", schemaAdminUser);

@@ -6,7 +6,7 @@ const { protect, authorize } = require("../../middleware/auth");
 
 
 module.exports = (app) => {
-	app.get("/adminUsers", protect, authorize("admin"), advancedResults(AdminUser, Role, "role"), asyncHandler(async (req, res, next) => {
+	app.get("/adminUsers", protect, authorize("admin"), advancedResults(AdminUser, Role, "role", "role"), asyncHandler(async (req, res, next) => {
 		const value = res.advancedResults;
 		const data = value.data.map(item => ({...item._doc, role: item._doc.role.role }));
 		const result = {...value, data };

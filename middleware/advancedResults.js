@@ -1,5 +1,6 @@
-const advancedResults = (model, popModel, path) => async (req, res, next) => {
+const advancedResults = (model, popModel, path, select) => async (req, res, next) => {
   const defaultLanguage = model.getDefaultLanguage();
+  const languages = model.getLanguages();
 
   let query;
   // Copy req.query
@@ -12,20 +13,25 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   removeFields.forEach(param => delete reqQuery[param]);
 
   //Unchangeable keys
-  const unchKeys = ["uniquePC", "uniqueCC", "category", "OTC_RX", "categoryParent", "price", "photo", "author", "createdAt"];
+  const unchKeys = ["uniquePC", "uniqueCC", "category", "OTC_RX", "categoryParent", "price", "photo", "author", "createdAt", `${path}`];
 
   //Modify object of query
   if(req.params.lan){
     unchKeys.forEach(param => delete reqQuery[param]);
     if(req.params.lan === "all"){
       reqQuery == {}
+      languages.forEach(l =>{
+		  const keyStr = `language.${l}`
+		  reqQuery[keyStr] = "yes";
+	  })
     }else {
       for(let key in reqQuery){
         const keyStr = `${key}.${req.params.lan}`;
         reqQuery[keyStr] = reqQuery[key];
         delete reqQuery[key];
       };
-      reqQuery.language[req.params.lan] = "yes";
+      const keyStr = `language.${req.params.lan}`
+      reqQuery[keyStr] = "yes";
     };
     unchKeys.forEach(param => {
       if (req.query[param]){
@@ -34,10 +40,11 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
     });
   }
 
+
   if(path && req.query[path]){
     const findObj ={};
     if(req.params.lan && req.params.lan !== "all"){
-      const str = `title.${req.params.lan}`
+      const str = `${select}.${req.params.lan}`
       findObj[str] = reqQuery[path];
       const res = await popModel.findOne(findObj);
       if(res){
@@ -46,7 +53,9 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
         delete reqQuery[path]
       }
 
-    }else if(!req.params.lan){
+    }else if(req.params.lan === "all"){
+		delete reqQuery[path]
+	}else if(!req.params.lan){
       findObj[path] = reqQuery[path];
       const res = await popModel.findOne(findObj);
 
@@ -109,7 +118,7 @@ const advancedResults = (model, popModel, path) => async (req, res, next) => {
   query = query.skip(startIndex).limit(limit);
 
   if (path) {
-    query = query.populate(path);
+    query = query.populate({path: path, select: select});
   }
 
   // Executing query

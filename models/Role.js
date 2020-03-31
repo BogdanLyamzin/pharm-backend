@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const { role } = require("../utils/validatorPattern");
 const createValidate = require("../utils/validator");
+const mongooseIntl = require('mongoose-intl');
 
 const funValidator = createValidate(role);
 
@@ -18,5 +19,7 @@ const schemaRole = new Schema({
 		default: Date.now
 	}
 });
+
+schemaRole.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
 
 module.exports = model("Role", schemaRole);

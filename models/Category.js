@@ -21,6 +21,7 @@ const schemaCategory = Schema({
 		type: String,
 		intl: true,
 		trim: true,
+		minlength: [3, "Too short title (min length 3 singles)."],
 	},
 	description: {
 		type: String,
