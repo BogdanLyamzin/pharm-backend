@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
 const mongooseIntl = require('mongoose-intl');
+const { languages, defaultLanguage } = require("../configs/languages");
 
 const schemaCategory = Schema({
 	uniqueCC: {
@@ -55,6 +56,6 @@ const schemaCategory = Schema({
 	}
 );
 
-schemaCategory.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+schemaCategory.plugin(mongooseIntl, { languages, defaultLanguage });
 
 module.exports = model("Category", schemaCategory);

@@ -7,6 +7,7 @@ const { name, password, email, department, phone } = require("../utils/validator
 const createValidate = require("../utils/validator");
 const {tokens, secret} = require("../configs/db").jwt;
 const mongooseIntl = require('mongoose-intl');
+const { languages, defaultLanguage } = require("../configs/languages");
 
 const funValidator = createValidate( name, password, email, department, phone);
 
@@ -102,6 +103,6 @@ schemaAdminUser.methods.generatorResetPasswordToken = function() {
 	return resetToken;
 };
 
-schemaAdminUser.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+schemaAdminUser.plugin(mongooseIntl, { languages, defaultLanguage });
 
 module.exports = model("AdminUser", schemaAdminUser);

@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const fileupload = require("express-fileupload");
 const mongooseIntl = require('mongoose-intl');
-const langueges = require("./configs/languages");
+const {languages, defaultLanguage} = require("./configs/languages");
 
 const errorHandler = require("./middleware/error");
 
@@ -15,7 +15,7 @@ const db = require("./configs/db").mongoURI;
 
 const app = express();
 app.use(bodyParser.json());
-mongoose.plugin(mongooseIntl, langueges);
+mongoose.plugin(mongooseIntl, {languages, defaultLanguage});
 
 //Cookie parser
 app.use(cookieParser());

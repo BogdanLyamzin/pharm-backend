@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
 const mongooseIntl = require('mongoose-intl');
+const { languages, defaultLanguage } = require("../configs/languages");
 
 const schemaProduct = Schema({
 	uniquePC: {
@@ -97,6 +98,6 @@ const schemaProduct = Schema({
 	}
 );
 
-schemaProduct.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+schemaProduct.plugin(mongooseIntl, { languages, defaultLanguage });
 
 module.exports = model("Product", schemaProduct);
