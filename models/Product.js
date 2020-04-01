@@ -97,6 +97,4 @@ const schemaProduct = Schema({
 	}
 );
 
-schemaProduct.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
-
 module.exports = model("Product", schemaProduct);
