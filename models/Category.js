@@ -55,4 +55,6 @@ const schemaCategory = Schema({
 	}
 );
 
+schemaCategory.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+
 module.exports = model("Category", schemaCategory);

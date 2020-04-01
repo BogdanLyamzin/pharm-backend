@@ -102,4 +102,6 @@ schemaAdminUser.methods.generatorResetPasswordToken = function() {
 	return resetToken;
 };
 
+schemaAdminUser.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+
 module.exports = model("AdminUser", schemaAdminUser);

@@ -20,4 +20,6 @@ const schemaRole = new Schema({
 	}
 });
 
+schemaRole.plugin(mongooseIntl, { languages: ['ru', 'uk'], defaultLanguage: 'ru' });
+
 module.exports = model("Role", schemaRole);
