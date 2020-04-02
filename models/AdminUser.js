@@ -16,7 +16,6 @@ const schemaAdminUser = Schema({
 		type: String,
 		required: [true, name.required],
 		trim: true,
-		lowercase: true,   // in this way or we will need to add additional field to sort and search
 		validate: funValidator.name,
 	},
 	phone: {
@@ -28,7 +27,6 @@ const schemaAdminUser = Schema({
 	department: {
 		type: String,
 		trim: true,
-		lowercase: true,
 		validate: funValidator.department,
 	},
 	role: {
@@ -93,9 +91,7 @@ schemaAdminUser.methods.generatorResetPasswordToken = function() {
 		uppercase: false,
 		symbols: false
 	});
-	console.log(this.resetPasswordToken)
 	const resetToken = CryptoJS.AES.encrypt(this.resetPasswordToken, secret).toString();
-	console.log(resetToken);
 
 	// Set expire (10m)
 	this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
