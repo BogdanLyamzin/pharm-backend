@@ -10,13 +10,16 @@ const { protect, authorize } = require("../../middleware/auth");
 // @access   role=admin???
 module.exports = (app) => {
 	app.post("/adminUsers", protect, authorize("admin"), asyncHandler(async (req, res, next) => {
-		if(req.password === req.confirm){
+		if (!req.body.confirm){
+			return next(new ErrorResponse("Please confirm password.", 400))
+		}
+		if(req.body.password === req.body.confirm){
 			const {password, name, email} = req.body;
 			checkRole(req.body.role);
 			const role = await Role.findOne({role: req.body.role});
 			const user = new AdminUser({...req.body, role: role._id})
 			const userSave = await user.save();
-			const data = {...userSave._doc, role: userSave._doc.role.role };
+			const data = {...userSave._doc, role: role.role };
 
 			res.status(201).json({
 				success: true,
