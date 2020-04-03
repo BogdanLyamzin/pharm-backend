@@ -1,7 +1,6 @@
 const AdminUser = require("../../models/AdminUser");
 const Role = require("../../models/Role");
 const sendMail = require("../../utils/sendMail");
-const checkRole = require("../../utils/checkRole");
 const { letterUpdateUser } = require("../../configs/mail");
 const asyncHandler = require("../../middleware/async");
 const ErrorResponse = require('../../utils/errorResponse');
@@ -18,13 +17,15 @@ module.exports = (app) => {
 			return next(new ErrorResponse(`User not found with id of ${req.params.id}`, 404));
 		};
 
-		if(adminUser._id.toString() !== req.adminUser._id.toString() || req.user.role.role !== 'admin'){
-			new ErrorResponse(`User ${req.user.id} is not authorized to update this data`, 401)
-		}
+		if(adminUser._id.toString() !== req.adminUser._id.toString() && req.adminUser.role.role !== 'admin'){
+			return next(new ErrorResponse(`User ${req.adminUser._id} is not authorized to update this data`, 401))
+		};
 
 		if(qerBody.role){
-			checkRole(qerBody.role);
 			const role = await Role.find({role: qerBody.role});
+			if(!role._id){
+				return next(new ErrorResponse(`The role ${qerBody.role} not found. At first add it to BD`, 401))
+			}
 			qerBody.role = role._id;
 		}
 

@@ -38,7 +38,8 @@ const advancedResults = (model, popModel, path, select) => async (req, res, next
         reqQuery[param] = req.query[param]
       }
     });
-  }
+  };
+
 
 
   if(path && req.query[path]){
