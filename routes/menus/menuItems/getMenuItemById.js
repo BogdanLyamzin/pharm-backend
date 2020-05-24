@@ -7,13 +7,13 @@ module.exports = (app) => {
             const result = await MenuItem.findById(req.params.key);
 
             res.send({
-                status: "Success",
-                result: result,
+                status: 'Success',
+                result: result
             });
         } catch (err) {
             res.send({
-                status: "Error",
-                message: err,
+                status: 'Error',
+                message: err
             });
         }
     });

@@ -7,13 +7,13 @@ module.exports = (app) => {
             const result = await MenuItem.findByIdAndDelete(req.params.id);
 
             res.send({
-                status: "Success",
-                result: result,
+                status: 'Success',
+                result: result
             });
         } catch (err) {
             res.send({
-                status: "Error",
-                message: err,
+                status: 'Error',
+                message: err
             });
         }
     });

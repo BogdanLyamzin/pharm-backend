@@ -1,10 +1,10 @@
-const Menu = require('../../models/Menu');
+const Image = require("../../models/Image");
 
 module.exports = (app) => {
-    app.delete('/menus/:id', async (req, res) => {
+    app.get('/images', async (req, res) => {
 
         try {
-            const result = await Menu.findByIdAndDelete(req.params.id);
+            const result = await Image.find(req.query);
 
             res.send({
                 status: 'Success',

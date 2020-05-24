@@ -20,13 +20,13 @@ module.exports = (app) => {
             const result = await MenuItem.findByIdAndUpdate(req.params.id, updatedMenuItem, options);
 
             res.send({
-                status: "Success",
-                result: result,
+                status: 'Success',
+                result: result
             });
         } catch (err) {
             res.send({
-                status: "Error",
-                message: err,
+                status: 'Error',
+                message: err
             });
         }
     });

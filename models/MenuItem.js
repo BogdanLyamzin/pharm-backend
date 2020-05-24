@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
-const { name, integerPosition } = require("../configs/validationRules");
-const createValidate = require("../utils/createValidate");
+const { name, integerPosition } = require('../configs/validationRules');
+const createValidate = require('../utils/createValidate');
 
 const { integerPositionValid, nameValid } = createValidate(integerPosition, name);
 

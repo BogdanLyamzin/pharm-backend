@@ -2,3 +2,5 @@ node_modules/
 package-lock.json
 .idea
 *.log
+public/uploads/files/
+public/uploads/images/
