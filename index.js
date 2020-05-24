@@ -12,8 +12,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-// const db = require('./configs/db').mongoURI;
-const db = 'mongodb://localhost/final-pharm';
+const db = require('./configs/db').mongoURI;
+// const db = 'mongodb://localhost/final-pharm';
 
 mongoose.connect(db, {
     useNewUrlParser: true,
