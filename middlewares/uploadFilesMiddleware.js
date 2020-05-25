@@ -6,7 +6,7 @@ const Image = require('../models/Image');
 const resizeAndSaveImages = require('../utils/imageUploadAndResize');
 const saveDocuments = require('../utils/fileUpload');
 
-const imageMimeTypes = require('../constans/imageMimetTypes');
+const imageMimeTypes = require('../constans/imageMimeTypes');
 const docsMimeTypes = require('../constans/docsMimeTypes');
 const allowedFileExtensions = require('../constans/allowedFileExtensions');
 
