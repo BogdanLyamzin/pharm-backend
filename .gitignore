@@ -2,3 +2,11 @@ node_modules/
 package-lock.json
 .idea
 *.log
+yarn.lock
+*.png
+*.webp
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
